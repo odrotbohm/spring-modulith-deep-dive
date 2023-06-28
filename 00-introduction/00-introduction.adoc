@@ -1,0 +1,34 @@
+[[introduction]]
+= Introduction
+
+[[introduction.logistics]]
+== 📋 Logistics
+
+=== Working with the document
+
+We use the following icons to represent different parts of the document
+
+* 🎯 -- Describes the learning goals of the lab
+* 👣 -- Describes a set of steps to complete a topical lab
+
+[[introduction.sample-code]]
+== 🧑‍💻 Sample Code
+
+[[introduction.sample-code.prerequisites]]
+=== 💼 Prerequisites
+* Git
+* Java 17
+* IDE (IDEA, Eclipse)
+
+[[introduction.sample-code.setup]]
+=== 👣 Steps -- Setup
+
+[source, bash]
+----
+$ git clone https://github.com/odrotbohm/spring-modulith-deep-dive
+$ cd spring-modulith-deep-dive
+$ ./mvnw clean verify
+----
+
+[[introduction.spring-cli]]
+== 🖥️ Spring CLI

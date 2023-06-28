@@ -1,0 +1,8 @@
+= Spring Modulith Deep Dive Workshop
+
+== Preparations
+[source, bash]
+-----
+$ ./mvnw -Pdocs -N`
+$ open target/generated-docs/index.html
+-----

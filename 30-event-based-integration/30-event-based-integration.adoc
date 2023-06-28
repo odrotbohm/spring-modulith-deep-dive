@@ -1,0 +1,20 @@
+[[events]]
+= Event-Based Application Module Integration
+
+[[events.imperative-downsides]]
+== 📖 -- Downsides of Imperative Interaction
+
+[[events.integration]]
+== 🧑‍💻 -- Integrating Modules Via Events
+
+[[events.consistency]]
+== 📖 -- Consistency
+
+[[events.application-module-listener]]
+== 🧑‍💻 -- Switching to `@ApplicationModuleListener`
+
+[[events.error-scenarios]]
+== 📖 -- Error Scenarios
+
+[[events.event-publication-registry]]
+== 🧑‍💻 -- Event Publication Registry

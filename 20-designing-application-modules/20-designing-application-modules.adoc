@@ -1,0 +1,44 @@
+[[module-design]]
+= Designing Application Modules
+
+[[module-design.control-visibility]]
+== 🧑‍💻 -- Using Application Modules to control visibility
+
+[[module-design.control-visibility.objectives]]
+=== 🎯 Objectives
+
+You'll learn how to…
+
+* … add components and events to the module and control their visibility
+* … verify foreign application modules cannot access internal components
+
+[[module-design.control-visibility.hiding-components]]
+=== 👣 Steps -- Hiding components in nested packages
+
+[[module-design.control-visibility.named-interfaces]]
+=== 👣 Steps -- Named interfaces
+
+- Annotate package with `@NamedInterface`
+- Discuss output
+- Add type in root package, annotated -> also assigned to that NI
+
+[[module-design.relationships]]
+== 🧑‍💻 - Establishing relationships between modules
+
+[[module-design.relationships.objectives]]
+=== 🎯 Objectives
+
+You'll learn how to…
+
+* … establish relationships between modules via Spring bean references
+* … detect invalid dependencies via a JUnit-based fitness function
+
+[[module-design.relationships.managing-type-relationships]]
+=== 👣 Steps -- Managing type relationships
+
+- Introduce inventory
+- Create `InventoryManagement`
+- Add constructor argument of type `OrderManagement`
+- add verify()
+- Run test -> green
+- Change constructor argument to `OrderRepository` -> red as it's an internal component

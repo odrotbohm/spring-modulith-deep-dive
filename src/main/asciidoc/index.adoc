@@ -1,0 +1,13 @@
+= Spring Modulith Deep-Dive
+:toc: left
+:index-link:
+:iconfont-fontawesome:
+
+include::../../../00-introduction/00-introduction.adoc[leveloffset=+1]
+include::../../../10-fundamentals/10-fundamentals.adoc[leveloffset=+1]
+include::../../../20-designing-application-modules/20-designing-application-modules.adoc[leveloffset=+1]
+include::../../../30-event-based-integration/30-event-based-integration.adoc[leveloffset=+1]
+include::../../../40-integration-testing/40-integration-testing.adoc[leveloffset=+1]
+include::../../../50-jmolecules/50-jmolecules.adoc[leveloffset=+1]
+include::../../../60-documentation/60-documentation.adoc[leveloffset=+1]
+

@@ -1,0 +1,15 @@
+target/
+.idea/
+.flattened-pom.xml
+.settings/
+*.iml
+.project
+.classpath
+.springBeans
+target/
+.factorypath
+changelog.txt
+
+#IntelliJ Stuff
+.idea
+*.iml

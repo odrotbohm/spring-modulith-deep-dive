@@ -1,0 +1,25 @@
+= Documentation
+:toc:
+:source: complete/src/main/java/com/acme/sample
+:test-source: complete/src/test/java/com/acme/sample
+
+== 🧑‍💻 -- Generating application module documentation
+
+You'll
+
+=== Steps -- Documentation
+
+1. Create an instance of `Documenter` by handing the `ApplicationModules` instance you have just created into its constructor.
+1. On that `Documenter` instance, call `createDocumentation()`.
+1. Run `ApplicationModularityTests`.
+
+=== Steps -- Documenting Spring Boot Configuration Properties
+
+1. Add Spring Boot configuration properties type to project
++
+[source, java]
+----
+include::{source}/inventory/InventoryProperties.java[]
+----
+2. Add configuration properties processor to project
+3. Re-run `ApplicationModularityTests` and see how

@@ -1,0 +1,89 @@
+[[fundamentals]]
+= Fundamentals
+:source: complete/src/main/java/com/example/app
+:test-source: complete/src/test/java/com/example/app
+
+[[fundamentals.setup]]
+== 🧑‍💻 -- Spring Modulith Setup
+
+[[fundamentals.setup.objectives]]
+=== 🎯 Objectives
+
+You'll learn how to…
+
+* … add the basic dependencies of Spring Modulith to your Spring Boot application.
+* … create an application module within the application.
+* … customize an application module's metadata.
+
+[[fundamentals.setup.steps]]
+=== 👣 Steps -- Build setup
+
+1. Open `pom.xml` and add the Spring Modulith BOM in the `<dependencyManagement />` section.
++
+[source, xml, subs="attributes+"]
+----
+<dependency>
+	<groupId>org.springframework.modulith</groupId>
+	<artifactId>spring-modulith-bom</artifactId>
+	<version>{spring-modulith-version}</version>
+	<type>pom</type>
+	<scope>import</scope>
+</dependency>
+----
+2. Add the `org.springframework:spring-modulith-starter-test` dependency in test scope to your `pom.xml`.
++
+[source, xml]
+----
+<dependency>
+	<groupId>org.springframework.modulith</groupId>
+	<artifactId>spring-modulith-starter-test</artifactId>
+	<scope>test</scope>
+</dependency>
+----
+3. Run `./mvnw dependency:list -Dsort`.
+4. See how the output lists the Spring Modulith dependencies in test scope.
++
+[source, bash, subs="attributes+"]
+----
+[INFO] org.springframework.modulith:spring-modulith-api:jar:{spring-modulith-version}:test -- module org.springframework.modulith.api [auto]
+[INFO] org.springframework.modulith:spring-modulith-core:jar:{spring-modulith-version}:test -- module org.springframework.modulith.core [auto]
+[INFO] org.springframework.modulith:spring-modulith-docs:jar:{spring-modulith-version}:test -- module org.springframework.modulith.docs [auto]
+[INFO] org.springframework.modulith:spring-modulith-starter-test:jar:{spring-modulith-version}:test -- module org.springframework.modulith.starter.test [auto]
+[INFO] org.springframework.modulith:spring-modulith-test:jar:{spring-modulith-version}:test -- module org.springframework.modulith.test [auto]
+----
+
+[[fundamentals.creating-modules]]
+== 🧑‍💻 -- Creating Application Modules
+
+[[fundamentals.creating-modules.objectives]]
+=== 🎯 Objectives
+
+You'll learn how to…
+
+* … create an application module within the application.
+
+[[fundamentals.creating-modules.preparations]]
+=== 👣 Steps -- Preparations
+
+1. Create a test class in the application's root package in `src/test/java` named `ApplicationModularityTests`.
+2. Within that class, create a test case to create a new instance of `ApplicationModules` pointing to the root Spring Boot application class.
+3. Print the result of `ApplicationModularityTests.toString()` to the console. Note, how it stays empty at first.
+
+[[fundamentals.creating-modules.adding-a-module]]
+=== 👣 Steps -- Adding a Module
+
+1. Create a package `order`.
+2. Add a public type `OrderManagement` in that package.
++
+[source, java]
+----
+include::{source}/order/OrderManagement.java[tags=class]
+----
+3. Re-run the test case to see an application module named `Order` is listed, as well as `OrderManagement` as public component.
+
+[[fundamentals.creating-modules.further-ideas]]
+=== 💡 Further ideas
+* What happens if you add sibling packages to `order` containing Spring bean classes in them?
+* How does changing the visibility modifier of the types in the packages change the test output?
+* How does the test output change if you introduce a dependency between components in different modules?
+
