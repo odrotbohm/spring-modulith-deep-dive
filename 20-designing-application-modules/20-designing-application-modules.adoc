@@ -1,8 +1,17 @@
 [[module-design]]
 = Designing Application Modules
+:tabsize: 2
+:source: complete/src/main/java/com/example/app
+:test-source: complete/src/test/java/com/example/app
+
+[[module-design.module-api-defaults]]
+== 📖 Fundamentals of Application Module design
+
+- Application module's base package considered its API package.
+- Any nested package is considered module-internal. Code residing in it is not allowed to be accessed by other application modules.
 
 [[module-design.control-visibility]]
-== 🧑‍💻 -- Using Application Modules to control visibility
+== 🧑‍💻 Using Application Modules to control visibility
 
 [[module-design.control-visibility.objectives]]
 === 🎯 Objectives
@@ -12,18 +21,70 @@ You'll learn how to…
 * … add components and events to the module and control their visibility
 * … verify foreign application modules cannot access internal components
 
-[[module-design.control-visibility.hiding-components]]
-=== 👣 Steps -- Hiding components in nested packages
+[[module-design.control-visibility.package-protected-types]]
+=== 👣 Hiding application module internals by using the package scope
 
+1. Add an `OrderRepository` class in default scope to the `order` package
++
+[source, java]
+----
+import org.springframework.stereotype.Repository;
+
+@Repository
+class OrderRepository {}
+----
+
+2. Create a Spring bean reference to the `OrderRepository` in `OrderManagement`.
++
+[source, java]
+----
+include::{source}/order/OrderManagement.java[tags=class]
+----
+
+3. Re-run `ApplicationModularityTests` and see how the output shows that `OrderRepository` is detected as internal module component (the `o` in front of the type name).
++
+[source]
+----
+…
+# Order
+> Logical name: order
+> Base package: com.example.app.order
+> Direct module dependencies: none
+> Spring beans:
+  + ….OrderManagement
+  o ….OrderRepository
+----
+4. Try to add a reference to `OrderRepository` from `ApplicationModularityTests` and see how the compiler prevents that.
+
+[[module-design.control-visibility.nested-packages]]
+=== 👣 Hiding components in nested packages
+1. Introduce a package named `order.persistence` and move `OrderRepository` to that package.
+To resolve the compiler error this creates in `OrderManagement`, change the visibility of the repository type to `public`.
+2. Re-run `ApplicationModularityTests` and see how the output shows that `OrderRepository` is still considered an internal component (the leading `o` in front of it) as it does not reside in the API package.
++
+[source]
+----
+…
+# Order
+> Logical name: order
+> Base package: com.example.app.order
+> Direct module dependencies: none
+> Spring beans:
+  + ….OrderManagement
+  o ….persistence.OrderRepository
+----
+
+////
 [[module-design.control-visibility.named-interfaces]]
 === 👣 Steps -- Named interfaces
 
 - Annotate package with `@NamedInterface`
 - Discuss output
 - Add type in root package, annotated -> also assigned to that NI
+////
 
 [[module-design.relationships]]
-== 🧑‍💻 - Establishing relationships between modules
+== 🧑‍💻 Establishing relationships between modules
 
 [[module-design.relationships.objectives]]
 === 🎯 Objectives
@@ -31,13 +92,13 @@ You'll learn how to…
 You'll learn how to…
 
 * … establish relationships between modules via Spring bean references
-* … detect invalid dependencies via a JUnit-based fitness function
+* … detect invalid dependencies via a JUnit-based architectural fitness function
 
 [[module-design.relationships.managing-type-relationships]]
-=== 👣 Steps -- Managing type relationships
+=== 👣 Managing type relationships
 
 - Introduce inventory
-- Create `InventoryManagement`
+- Create `Inventory`
 - Add constructor argument of type `OrderManagement`
 - add verify()
 - Run test -> green
