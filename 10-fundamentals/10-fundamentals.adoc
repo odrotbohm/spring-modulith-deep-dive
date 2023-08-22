@@ -1,10 +1,11 @@
 [[fundamentals]]
 = Fundamentals
+:tabsize: 2
 :source: complete/src/main/java/com/example/app
 :test-source: complete/src/test/java/com/example/app
 
 [[fundamentals.setup]]
-== 🧑‍💻 -- Spring Modulith Setup
+== 🧑‍💻 Spring Modulith Setup
 
 [[fundamentals.setup.objectives]]
 === 🎯 Objectives
@@ -16,7 +17,7 @@ You'll learn how to…
 * … customize an application module's metadata.
 
 [[fundamentals.setup.steps]]
-=== 👣 Steps -- Build setup
+=== 👣 Build setup
 
 1. Open `pom.xml` and add the Spring Modulith BOM in the `<dependencyManagement />` section.
 +
@@ -53,7 +54,7 @@ You'll learn how to…
 ----
 
 [[fundamentals.creating-modules]]
-== 🧑‍💻 -- Creating Application Modules
+== 🧑‍💻 Creating Application Modules
 
 [[fundamentals.creating-modules.objectives]]
 === 🎯 Objectives
@@ -63,14 +64,15 @@ You'll learn how to…
 * … create an application module within the application.
 
 [[fundamentals.creating-modules.preparations]]
-=== 👣 Steps -- Preparations
+=== 👣 Preparations
 
 1. Create a test class in the application's root package in `src/test/java` named `ApplicationModularityTests`.
 2. Within that class, create a test case to create a new instance of `ApplicationModules` pointing to the root Spring Boot application class.
-3. Print the result of `ApplicationModularityTests.toString()` to the console. Note, how it stays empty at first.
+3. Print the result of `ApplicationModularityTests.toString()` to the console.
+Note, how it stays empty at first.
 
 [[fundamentals.creating-modules.adding-a-module]]
-=== 👣 Steps -- Adding a Module
+=== 👣 Adding a Module
 
 1. Create a package `order`.
 2. Add a public type `OrderManagement` in that package.
