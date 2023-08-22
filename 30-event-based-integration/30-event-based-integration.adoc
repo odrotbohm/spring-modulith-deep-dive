@@ -1,20 +1,442 @@
 [[events]]
 = Event-Based Application Module Integration
+:tabsize: 2
+:source: complete/src/main/java/com/example/app
+:snippets-source: complete/src/test/java/snippets
 
-[[events.imperative-downsides]]
-== 📖 -- Downsides of Imperative Interaction
+[[events.imperative]]
+== 🧑‍💻 Downsides of Imperative Interaction
+
+[[events.imperative.objectives]]
+=== 🎯 Objectives
+
+=== 👣 Integrating via `@EventListener`
 
 [[events.integration]]
-== 🧑‍💻 -- Integrating Modules Via Events
+== 🧑‍💻 Integrating Modules Via Spring Application Events
+
+[[events.integration.objectives]]
+=== 🎯 Objectives
+
+You'll learn…
+
+* … how to replace the direct Spring bean invocation to trigger transitive functionality with a Spring event listener.
+* … about the effect that switch has on how the code is executed and how it affects the consistency model of the overall arrangement.
+
+[[events.integration.at-event-listener]]
+=== 👣 Integrating via `@EventListener`
+
+In this section we are going to refactor the interaction between `OrderManagement` and `InventoryManagement` to use Spring's `ApplicationEventPublisher` and explore how the event publication is executed.
+
+1. Add a record `OrderCompleted` in the `order` package:
++
+[source, java]
+----
+public record OrderCompleted() {}
+----
+2. In `OrderManagement` remove the dependencies to the `EmailSender` and the `Inventory`.
+Add a dependency to `ApplicationEventPublisher` instead and use it in a method named `complete()` to publish an instance of `OrderCompleted` instead of actively invoking methods on the just removed dependencies.
++
+[source,java,indent=0]
+----
+private final ApplicationEventPublisher events;
+
+void complete(Order order) {
+
+	orders.save(order.complete());
+
+	events.publishEvent(new OrderCompleted());
+
+	log.info("Finish order completion.");
+}
+----
+
+3. In `InventoryManagement`, a method annotated with `@EventListener` to receive `OrderCompleted` events and delegate to the already existing `updateStockFor(…)` method.
+Use the reference to `OrderManagement` to look up the order to be processed by using the identifier contained in the event.
++
+[source,java]
+----
+@EventListener
+void on(OrderCompleted event) {
+	updateStockFor(orders.findById(event.orderIdentifier()));
+}
+----
+
+4. Similarly, add an event listener method in `EmailSender`.
++
+[source, java]
+----
+@EventListener
+void on(OrderCompleted event) {
+	sendEmailFor(event.orderIdentifier());
+}
+----
+5. Run the `completesOrder()` in `OrderManagementIntegrationTests` and observe the log output.
++
+[literal]
+----
+… main : Started OrderManagementIntegrationTests in 1.481 seconds (process running for 2.198)
+… main : Creating new transaction with name [com.example.app.order.OrderManagement.complete]: PROPAGATION_REQUIRED,ISOLATION_DEFAULT
+… main : Opened new EntityManager [SessionImpl(403583920<open>)] for JPA transaction
+… main : Exposing JPA transaction as JDBC [org.springframework.orm.jpa.vendor.HibernateJpaDialect$HibernateConnectionHandle@151d216e]
+… main : Found thread-bound EntityManager [SessionImpl(403583920<open>)] for JPA transaction
+… main : Participating in existing transaction
+… main : Found thread-bound EntityManager [SessionImpl(403583920<open>)] for JPA transaction
+… main : Participating in existing transaction
+… main : Updating stock for 1cef9451-e851-48d1-a750-9739b279b51c.
+… main : Sending email for order 1cef9451-e851-48d1-a750-9739b279b51c.
+… main : Email sent for order 1cef9451-e851-48d1-a750-9739b279b51c.
+… main : Finish order completion.
+… main : Initiating transaction commit
+… main : Committing JPA transaction on EntityManager [SessionImpl(403583920<open>)]
+----
+Note how a transaction is created for the execution of `OrderManagement.complete(…)`.
+We then see the log output for the inventory update and the email sending all happening on the `main` thread.
+You should also see the email sending taking roundabout one second, which means that we block the original transaction and cannot return the connection before that is completed although the primary business transaction only takes a couple of milliseconds.
+
+[[events.integration.a-failing-listener]]
+=== 👣 A Failing Event Listener
+
+Let us move on investigating what happens in case one of the listeners fails:
+
+1. Change the processing of the in `Inventory` to throw a `RuntimeException`.
++
+[source,java]
+----
+public void updateStockFor(Order order) {
+	log.info("Updating stock for order {}.", order.getId());
+	throw new RuntimeException(); // <- add this
+}
+----
+2. Re-run `OrderManagementIntegrationTests.completesOrder()` and see how the test now fails and the log output changes to this:
++
+[literal]
+----
+… main : Started OrderManagementIntegrationTests in 1.479 seconds (process running for 2.174)
+… main : Creating new transaction with name [com.example.app.order.OrderManagement.complete]: PROPAGATION_REQUIRED,ISOLATION_DEFAULT
+… main : Opened new EntityManager [SessionImpl(1617891184<open>)] for JPA transaction
+… main : Exposing JPA transaction as JDBC [org.springframework.orm.jpa.vendor.HibernateJpaDialect$HibernateConnectionHandle@7e36d508]
+… main : Found thread-bound EntityManager [SessionImpl(1617891184<open>)] for JPA transaction
+… main : Participating in existing transaction
+…
+… main : Updating stock for order dcb6593e-b362-4d67-adfa-665c84f0baf0.
+… main : Participating transaction failed - marking existing transaction as rollback-only
+… main : Setting JPA transaction on EntityManager [SessionImpl(1617891184<open>)] rollback-only
+… main : Initiating transaction rollback
+… main : Rolling back JPA transaction on EntityManager [SessionImpl(1617891184<open>)]
+… main : Closing JPA EntityManager [SessionImpl(1617891184<open>)] after transaction
+----
+Note how the stock update fails, causes the email sending to be skipped entirely and the exception causing the transaction to be rolled back.
+
+3. Remove the code throwing the `RuntimeException` from `InventoryManagement` and rather move the failure to the very end of `OrderManagement.complete(…)`.
+This way, we simulate an error occurring _after_ the event listeners have been executed.
+Re-run `OrderManagementIntegrationTests.completesOrder()` and look at the log output:
++
+[literal]
+----
+… main : Started OrderManagementIntegrationTests in 1.463 seconds (process running for 2.262)
+… main : Creating new transaction with name [com.example.app.order.OrderManagement.complete]: PROPAGATION_REQUIRED,ISOLATION_DEFAULT
+… main : Opened new EntityManager [SessionImpl(1505756962<open>)] for JPA transaction
+… main : Exposing JPA transaction as JDBC [org.springframework.orm.jpa.vendor.HibernateJpaDialect$HibernateConnectionHandle@4f1f2f84]
+… main : Found thread-bound EntityManager [SessionImpl(1505756962<open>)] for JPA transaction
+… main : Participating in existing transaction
+…
+… main : Updating stock for order 44b235f9-cd9a-4c52-a843-fc8dca34b62a.
+… main : Sending email for order 44b235f9-cd9a-4c52-a843-fc8dca34b62a.
+… main : Email sent for order 44b235f9-cd9a-4c52-a843-fc8dca34b62a.
+… main : Finish order completion.
+… main : Initiating transaction rollback
+… main : Rolling back JPA transaction on EntityManager [SessionImpl(1505756962<open>)]
+… main : Closing JPA EntityManager [SessionImpl(1505756962<open>)] after transaction
+----
+Note how the stock update is performed and the email is sent out.
+Due to the `RuntimeException` we throw at the very end of `OrderManagement.complete()` the transaction is rolled back eventually, leaving the email sent out for an uncompleted order.
+We would actually like to avoid that.
+
+[[events.integration.summary]]
+=== 💡 Summary
+
+In this lab we have seen how to replace direct Spring bean invocations by using Spring's application event bus.
+This allows us to avoid the dependencies from the order module to break the cycle we had previously introduced accidentally.
 
 [[events.consistency]]
-== 📖 -- Consistency
+== 📖 Consistency
+
+* Simple ``@EventListener``s are triggered synchronously which means that they run inside the primary business transaction.
+* Challenges:
+** Do we really want transitive functionality located in other modules allow to break the original business transaction?
+** The transaction has not committed yet. What if the functionality in the listener (sending out an email, for example) expects it to be completely done.
+** Interacting with infrastructure except the database (such as a message broker or email server) is usually expensive. If we execute that code within the original transaction, it will significantly expand the resource allocation and might, for example, saturate the connection pool.
+
+* Solution: an alternative event handling mode that triggers listeners both on transaction commit `@TransactionalEventListener` and asynchronously `@Async`.
 
 [[events.application-module-listener]]
-== 🧑‍💻 -- Switching to `@ApplicationModuleListener`
+== 🧑‍💻 Switching to `@ApplicationModuleListener`
+
+[[events.application-module-listener.objectives]]
+=== 🎯 Objectives
+
+[[events.application-module-listener.steps]]
+=== 👣 Changing the listener execution model
+
+1. Replace the `@EventListener` annotation in both `InventoryManagement` and `EmailSender` with `@ApplicationEventListener`.
+2. Re-run the test and inspect log output.
++
+[literal]
+----
+… main : Started OrderManagementIntegrationTests in 1.464 seconds (process running for 2.171)
+… main : Creating new transaction with name [com.example.app.order.OrderManagement.complete]: PROPAGATION_REQUIRED,ISOLATION_DEFAULT
+… main : Opened new EntityManager [SessionImpl(1977568029<open>)] for JPA transaction
+… main : Exposing JPA transaction as JDBC [org.springframework.orm.jpa.vendor.HibernateJpaDialect$HibernateConnectionHandle@3bf41cd0]
+… main : Found thread-bound EntityManager [SessionImpl(1977568029<open>)] for JPA transaction
+… main : Participating in existing transaction
+… main : Finish order completion.
+… main : Initiating transaction commit
+… main : Committing JPA transaction on EntityManager [SessionImpl(1977568029<open>)]
+
+… main : Found thread-bound EntityManager [SessionImpl(1977568029<open>)] for JPA transaction
+… main : Suspending current transaction, creating new transaction with name [com.example.app.inventory.Inventory.on]
+… main : Opened new EntityManager [SessionImpl(1074053050<open>)] for JPA transaction
+… main : Exposing JPA transaction as JDBC [org.springframework.orm.jpa.vendor.HibernateJpaDialect$HibernateConnectionHandle@c19bb2a]
+… main : Found thread-bound EntityManager [SessionImpl(1074053050<open>)] for JPA transaction
+… main : Participating in existing transaction
+… main : Found thread-bound EntityManager [SessionImpl(1074053050<open>)] for JPA transaction
+… main : Participating in existing transaction
+… main : Updating stock for order 218cca0f-c89c-4342-a7af-a25c4c5740ee.
+… main : Initiating transaction commit
+… main : Committing JPA transaction on EntityManager [SessionImpl(1074053050<open>)]
+… main : Closing JPA EntityManager [SessionImpl(1074053050<open>)] after transaction
+
+… main : Resuming suspended transaction after completion of inner transaction
+… main : Found thread-bound EntityManager [SessionImpl(1977568029<open>)] for JPA transaction
+… main : Suspending current transaction, creating new transaction with name [com.example.app.order.EmailSender.on]
+… main : Opened new EntityManager [SessionImpl(1394284408<open>)] for JPA transaction
+… main : Exposing JPA transaction as JDBC [org.springframework.orm.jpa.vendor.HibernateJpaDialect$HibernateConnectionHandle@ecfff32]
+… main : Sending email for order 218cca0f-c89c-4342-a7af-a25c4c5740ee.
+… main : Email sent for order 218cca0f-c89c-4342-a7af-a25c4c5740ee.
+… main : Initiating transaction commit
+… main : Committing JPA transaction on EntityManager [SessionImpl(1394284408<open>)]
+… main : Closing JPA EntityManager [SessionImpl(1394284408<open>)] after transaction
+
+… main : Resuming suspended transaction after completion of inner transaction
+… main : Closing JPA EntityManager [SessionImpl(1977568029<open>)] after transaction
+----
++
+Our transactional execution arrangement got slightly more complicated.
+`OrderManagement.complete(…)` publishes events and they get registered for submission on transaction commit.
+The business method succeeds and the original transaction gets committed.
+During the transaction cleanup phase, the listener declared in `InventoryManagement` is triggered due to the implicit `@TransactionalEventListener`.
+A new transaction is created as `@ApplicationModuleListener` is meta-annotated with `@Transactional(propagation = REQUIRES_NEW)`.
+The original transaction however is suspended, but resources are kept alive (see the `EntityManager` instance 1977568029 and thus the connection backing it).
+Also, the listener is executed on the same (`main`) thread.
+The `@Async` annotation does not seem to be considered yet.
+The same applies to the second listener to send out emails.
+The original business transaction (`EntityManager` instance 1977568029) is closed eventually.
+3. To get the asynchronous execution working, add `@EnableAsync` on the main application class:
++
+[source, java]
+----
+@EnableAsync // <- add this
+@SpringBootApplication
+public class Application { /* … */ }
+----
+4. As we expect our listener to be executed on a separate thread, the call to `OrderManagement.complete()` will immediately return.
+To make sure that the test doesn't quit before the listener has completed, let us add a `Thread.sleep()` to it for now.
+We will improve on that later.
++
+[source, java]
+----
+@SpringBootTest
+class OrderManagementIntegrationTests {
+
+	@Test
+	void publishesEventOnCompletion() throws InterruptedException {
+
+		orders.complete(new Order());
+
+		Thread.sleep(2000); // <- add this and that ^^
+	}
+}
+----
+5. Re-run `OrderManagementIntegrationTests` and watch the log output.
++
+[literal]
+----
+…   main : Started OrderManagementIntegrationTests in 1.505 seconds (process running for 2.177)
+…   main : Creating new transaction with name [com.example.app.order.OrderManagement.complete]: PROPAGATION_REQUIRED,ISOLATION_DEFAULT
+…   main : Opened new EntityManager [SessionImpl(1604949791<open>)] for JPA transaction
+…   main : Exposing JPA transaction as JDBC [org.springframework.orm.jpa.vendor.HibernateJpaDialect$HibernateConnectionHandle@377cbdae]
+…   main : Found thread-bound EntityManager [SessionImpl(1604949791<open>)] for JPA transaction
+…   main : Participating in existing transaction
+…   main : Finish order completion.
+…   main : Initiating transaction commit
+…   main : Committing JPA transaction on EntityManager [SessionImpl(1604949791<open>)]
+
+… task-1 : Creating new transaction with name [com.example.app.inventory.Inventory.on]: PROPAGATION_REQUIRES_NEW,ISOLATION_DEFAULT
+… task-1 : Opened new EntityManager [SessionImpl(1062114679<open>)] for JPA transaction
+… task-1 : Exposing JPA transaction as JDBC [org.springframework.orm.jpa.vendor.HibernateJpaDialect$HibernateConnectionHandle@31896cee]
+… task-1 : Found thread-bound EntityManager [SessionImpl(1062114679<open>)] for JPA transaction
+… task-1 : Participating in existing transaction
+… task-2 : Creating new transaction with name [com.example.app.order.EmailSender.on]: PROPAGATION_REQUIRES_NEW,ISOLATION_DEFAULT
+…   main : Closing JPA EntityManager [SessionImpl(1604949791<open>)] after transaction
+… task-2 : Opened new EntityManager [SessionImpl(1942841355<open>)] for JPA transaction
+… task-2 : Exposing JPA transaction as JDBC [org.springframework.orm.jpa.vendor.HibernateJpaDialect$HibernateConnectionHandle@7d0a8802]
+… task-2 : Sending email for order 8fe72caf-3338-422d-b905-f017208839ba.
+… task-1 : Found thread-bound EntityManager [SessionImpl(1062114679<open>)] for JPA transaction
+… task-1 : Participating in existing transaction
+… task-1 : Updating stock for order 8fe72caf-3338-422d-b905-f017208839ba.
+… task-1 : Initiating transaction commit
+… task-1 : Committing JPA transaction on EntityManager [SessionImpl(1062114679<open>)]
+… task-1 : Closing JPA EntityManager [SessionImpl(1062114679<open>)] after transaction
+… task-2 : Email sent for order 8fe72caf-3338-422d-b905-f017208839ba.
+… task-2 : Initiating transaction commit
+… task-2 : Committing JPA transaction on EntityManager [SessionImpl(1942841355<open>)]
+… task-2 : Closing JPA EntityManager [SessionImpl(1942841355<open>)] after transaction
+----
+The invocation of our listener updating the inventory has been moved to a separate thread as we can see from the `task-1` thread name in the log output and gets an dedicated transaction started (1062114679).
+The same for the thread executing the email sending.
+The primary effect of that is that the original transaction does not need to be suspended anymore as the transaction created for the listener runs without an existing transaction in its execution context.
+This also means that the resources acquired by the original transaction can be freed early as evident from the interleaved log statement from the `main` thread.
+
+6. To see how this arrangement reacts to the original business method failing eventually, throw a `RuntimeException` at the very end of it.
++
+[source, java]
+----
+public class OrderManagement {
+
+	public void complete(Order order) {
+
+		orders.save(order.complete());
+
+		events.publishEvent(new OrderCompleted(order.getId()));
+
+		log.info("Finish order completion.");
+
+		throw new RuntimeException(); // <- add this
+	}
+}
+----
+7. Re-run
++
+[literal]
+----
+… main : Started OrderManagementIntegrationTests in 1.494 seconds (process running for 2.258)
+… main : Creating new transaction with name [com.example.app.order.OrderManagement.complete]: PROPAGATION_REQUIRED,ISOLATION_DEFAULT
+… main : Opened new EntityManager [SessionImpl(923439967<open>)] for JPA transaction
+… main : Exposing JPA transaction as JDBC [org.springframework.orm.jpa.vendor.HibernateJpaDialect$HibernateConnectionHandle@6cb417fc]
+… main : Found thread-bound EntityManager [SessionImpl(923439967<open>)] for JPA transaction
+… main : Participating in existing transaction
+… main : Finish order completion.
+… main : Initiating transaction rollback
+… main : Rolling back JPA transaction on EntityManager [SessionImpl(923439967<open>)]
+… main : Closing JPA EntityManager [SessionImpl(923439967<open>)] after transaction
+----
+Note how the failed execution leads to a transaction rollback and the listeners _not_ being invoked, despite the event having been published.
+In other words, this scenario does not suffer from the premature email publication we have seen in <<events.integration.a-failing-listener>>.
+
+[[events.application-module-listener.summary]]
+=== 💡 Summary
+
+We have switched to an integration mode in which the attached functionality is executed separately from the original unit of work.
+This allows the seamless integration of such functionality in a way that it does not negatively affect the primary use case.
+However, there are a couple of things to consider:
+
+* As the listeners are executed asynchronously waiting for the side effects to manifest requires low-level thread handling.
+This is something that could be nicer.
+* The asynchronous execution implies the question of what happens if the event listener fails.
+* Having to add `@EnableAsync` manually to make sure the listeners really get executed asynchronously feels a little cumbersome, too.
 
 [[events.error-scenarios]]
-== 📖 -- Error Scenarios
+== 📖 Error Scenarios
+
+* Failing listener -> event publication lost.
 
 [[events.event-publication-registry]]
-== 🧑‍💻 -- Event Publication Registry
+== 🧑‍💻 Event Publication Registry
+
+To prevent event publications from being lost when listeners fail, Spring Modulith provides integration with Spring's application event bus.
+It tracks the publications and decorates listeners to mark successfully handled event publications as completed.
+
+[[events.event-publication-registry.objectives]]
+=== 🎯 Objectives
+
+You will learn…
+
+* … how to make use of Spring Modulith's Event Publication Registry to keep track of outstanding event publications.
+* … how that in place prevents event publications from getting lost in case of listener failures.
+
+[[events.event-publication-registry.steps]]
+=== 👣 Add Spring Modulith's Event Publication Registry
+
+1. To make use of the Event Publication Registry add the Spring Modulith JPA starter to the `pom.xml`.
++
+[source, xml]
+----
+<dependency>
+	<groupId>org.springframework.modulith</groupId>
+	<artifactId>spring-modulith-starter-jpa</artifactId>
+</dependency>
+----
+The starter pulls in the general registry infrastructure and Spring Boot auto-configuration to automatically hook into Spring's `ApplicationEventMulticaster` to keep track of the publications and decorate transactional event listeners to mark the publications as completed on listener success.
+
+2. To see this working, simply re-run `OrderManagementIntegrationTests.completesOrder()` and inspect the log output.
++
+[literal]
+----
+…     main : Started OrderManagementIntegrationTests in 1.911 seconds (process running for 2.648)
+…     main : Registering publication of com.example.app.order.OrderCompleted for com.example.app.inventory.Inventory.on(com.example.app.order.OrderCompleted).
+…     main : Registering publication of com.example.app.order.OrderCompleted for com.example.app.order.EmailSender.on(com.example.app.order.OrderCompleted).
+…     main : Finish order completion.
+…   task-2 : Sending email for order 1f1221e4-c748-43b4-a627-6556b1132b08.
+…   task-1 : Updating stock for order 1f1221e4-c748-43b4-a627-6556b1132b08.
+…   task-1 : Marking publication of event com.example.app.order.OrderCompleted to listener com.example.app.inventory.Inventory.on(com.example.app.order.OrderCompleted) completed.
+…   task-2 : Email sent for order 1f1221e4-c748-43b4-a627-6556b1132b08.
+…   task-2 : Marking publication of event com.example.app.order.OrderCompleted to listener com.example.app.order.EmailSender.on(com.example.app.order.OrderCompleted) completed.
+… downHook : No publications outstanding!
+----
+Note how, during the execution of the primary business method, the publication of the event triggers the registration of event publications with the registry.
+As both listeners complete successfully, the publication is marked completed on the corresponding threads.
+The test concludes by reporting that no publications are outstanding.
+
+3. Tweak the `Inventory` to fail during the processing of the order by re-adding the `RuntimeException`.
++
+[source, java]
+----
+public class Inventory {
+
+	public void updateStockFor(Order order) {
+
+		log.info("Updating stock for order {}.", order.getId());
+
+		throw new RuntimeException(); // <- add this
+	}
+}
+----
+
+4. Re-run the integration tests and inspect the log output.
++
+[literal]
+----
+…     main : Started OrderManagementIntegrationTests in 1.859 seconds (process running for 2.576)
+…     main : Registering publication of com.example.app.order.OrderCompleted for com.example.app.inventory.Inventory.on(com.example.app.order.OrderCompleted).
+…     main : Registering publication of com.example.app.order.OrderCompleted for com.example.app.order.EmailSender.on(com.example.app.order.OrderCompleted).
+…     main : Finish order completion.
+…   task-2 : Sending email for order 6dc323ab-926e-42f7-9a85-3614c4cb9888.
+…   task-1 : Updating stock for order 6dc323ab-926e-42f7-9a85-3614c4cb9888.
+…   task-1 : Invocation of listener void com.example.app.inventory.Inventory.on(com.example.app.order.OrderCompleted) failed. Leaving event publication uncompleted.
+
+java.lang.RuntimeException: null
+	at com.example.app.inventory.Inventory.updateStockFor(Inventory.java:49)
+	at com.example.app.inventory.Inventory.on(Inventory.java:42)
+	…
+
+…   task-2 : Email sent for order 6dc323ab-926e-42f7-9a85-3614c4cb9888.
+…   task-2 : Marking publication of event com.example.app.order.OrderCompleted to listener com.example.app.order.EmailSender.on(com.example.app.order.OrderCompleted) completed.
+… downHook : Shutting down with the following publications left unfinished:
+… downHook : └─ com.example.app.order.OrderCompleted - com.example.app.inventory.Inventory.on(com.example.app.order.OrderCompleted)
+----
+The publications get registered as before, the `Inventory` listener fails as can be seen by the reported exception stack trace leaving the publication uncompleted.
+This is also reported in the eventual shutdown of the application context.
+
+[[events.event-publication-registry.summary]]
+=== 💡 Summary
