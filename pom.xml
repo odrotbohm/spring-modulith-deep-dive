@@ -23,6 +23,7 @@
 		<module>40-integration-testing</module>
 		<module>50-jmolecules</module>
 		<module>60-documentation</module>
+		<module>70-splitup</module>
 	</modules>
 
 	<properties>

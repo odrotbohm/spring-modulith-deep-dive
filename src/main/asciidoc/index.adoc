@@ -10,4 +10,5 @@ include::../../../30-event-based-integration/30-event-based-integration.adoc[lev
 include::../../../40-integration-testing/40-integration-testing.adoc[leveloffset=+1]
 include::../../../50-jmolecules/50-jmolecules.adoc[leveloffset=+1]
 include::../../../60-documentation/60-documentation.adoc[leveloffset=+1]
+include::../../../70-splitup/70-splitup.adoc[leveloffset=+1]
 

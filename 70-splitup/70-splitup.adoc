@@ -1,0 +1,6 @@
+[[splitup]]
+= Splitting the Modulith
+
+== Introduction
+
+image::images/splitup.jpeg[]
