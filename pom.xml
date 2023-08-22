@@ -28,7 +28,7 @@
 	<properties>
 		<java.version>17</java.version>
 		<spring-asciidoctor-backends.version>0.0.5</spring-asciidoctor-backends.version>
-		<spring-modulith.version>1.0.0-M1</spring-modulith.version>
+		<spring-modulith.version>1.0.0</spring-modulith.version>
 	</properties>
 
 	<profiles>
