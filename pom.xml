@@ -92,8 +92,7 @@
 								<sectids>false</sectids>
 								<imagesdir>images</imagesdir>
 								<spring-modulith-version>${spring-modulith.version}</spring-modulith-version>
-								<toclevels>2</toclevels>
-								<numbered>true</numbered>
+								<toclevels>3</toclevels>
 							</attributes>
 							<requires>
 								<require>asciidoctor-diagram</require>
