@@ -3,6 +3,6 @@
 == Preparations
 [source, bash]
 -----
-$ ./mvnw -Pdocs -N`
+$ ./mvnw -Pdocs -N
 $ open target/generated-docs/index.html
 -----
