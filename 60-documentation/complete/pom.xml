@@ -19,14 +19,14 @@
 			<dependency>
 				<groupId>org.jmolecules</groupId>
 				<artifactId>jmolecules-bom</artifactId>
-				<version>2022.3.0</version>
+				<version>2023.1.2</version>
 				<type>pom</type>
 				<scope>import</scope>
 			</dependency>
 			<dependency>
 				<groupId>org.springframework.modulith</groupId>
 				<artifactId>spring-modulith-bom</artifactId>
-				<version>1.0.0-M1</version>
+				<version>1.2.0-M3</version>
 				<type>pom</type>
 				<scope>import</scope>
 			</dependency>
@@ -39,9 +39,9 @@
 			<groupId>org.jmolecules.integrations</groupId>
 			<artifactId>jmolecules-starter-ddd</artifactId>
 		</dependency>
-		
+
 		<!-- Spring Boot -->
-		
+
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter</artifactId>
@@ -73,6 +73,7 @@
 	<build>
 		<plugins>
 
+			<!--
 			<plugin>
 				<groupId>org.springframework.boot</groupId>
 				<artifactId>spring-boot-maven-plugin</artifactId>
@@ -87,6 +88,7 @@
 					</dependency>
 				</dependencies>
 			</plugin>
+		-->
 
 			<plugin>
 				<groupId>net.bytebuddy</groupId>
@@ -139,7 +141,7 @@
 								<configuration>
 									<requires>
 										<require>asciidoctor-diagram</require>
-									</requires>								
+									</requires>
 								</configuration>
 							</execution>
 						</executions>
