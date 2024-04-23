@@ -1,3 +1,4 @@
+[preface]
 [[introduction]]
 = Introduction
 :imagesdir: images
