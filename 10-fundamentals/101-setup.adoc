@@ -1,0 +1,57 @@
+[[fundamentals.setup]]
+= 🧑‍💻 Spring Modulith Setup
+
+ifdef::educates[]
+[source, editor:open-file]
+----
+file: ~/exercises/10-fundamentals/initial/src/main/java/com/example/app/Application.java
+autostart: true
+hidden: true
+----
+endif::[]
+
+[[fundamentals.setup.objectives]]
+== 🎯 Objectives
+
+You'll learn how to…
+
+* … add the basic dependencies of Spring Modulith to your Spring Boot application.
+* … create an application module within the application.
+* … customize an application module's metadata.
+
+[[fundamentals.setup.steps]]
+== 👣 Build setup
+
+1. Open `pom.xml` and add the Spring Modulith BOM in the `<dependencyManagement />` section.
++
+[source, xml, subs="attributes+"]
+----
+<dependency>
+	<groupId>org.springframework.modulith</groupId>
+	<artifactId>spring-modulith-bom</artifactId>
+	<version>{spring-modulith-version}</version>
+	<type>pom</type>
+	<scope>import</scope>
+</dependency>
+----
+2. Add the `org.springframework:spring-modulith-starter-test` dependency in test scope to your `pom.xml`.
++
+[source, xml]
+----
+<dependency>
+	<groupId>org.springframework.modulith</groupId>
+	<artifactId>spring-modulith-starter-test</artifactId>
+	<scope>test</scope>
+</dependency>
+----
+3. Run `./mvnw dependency:list -Dsort`.
+4. See how the output lists the Spring Modulith dependencies in test scope.
++
+[source, bash, subs="attributes+"]
+----
+[INFO] org.springframework.modulith:spring-modulith-api:jar:{spring-modulith-version}:test -- module org.springframework.modulith.api [auto]
+[INFO] org.springframework.modulith:spring-modulith-core:jar:{spring-modulith-version}:test -- module org.springframework.modulith.core [auto]
+[INFO] org.springframework.modulith:spring-modulith-docs:jar:{spring-modulith-version}:test -- module org.springframework.modulith.docs [auto]
+[INFO] org.springframework.modulith:spring-modulith-starter-test:jar:{spring-modulith-version}:test -- module org.springframework.modulith.starter.test [auto]
+[INFO] org.springframework.modulith:spring-modulith-test:jar:{spring-modulith-version}:test -- module org.springframework.modulith.test [auto]
+----
