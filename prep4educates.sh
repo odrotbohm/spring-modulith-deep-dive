@@ -7,11 +7,6 @@ rm -rf $basedir
 # Scan folders starting with two digits
 for dir in [0-9][0-9]*/; do
 
-    # Skip 60-documentation for now
-    if [[ $dir == "60-"* ]]; then
-        continue;
-    fi
-
     mkdir -p "${basedir}/${dir}"
 
     # Find all AsciiDoc files recursively
