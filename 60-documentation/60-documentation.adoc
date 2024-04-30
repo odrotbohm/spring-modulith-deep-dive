@@ -1,7 +1,7 @@
 = Documentation
 :toc:
-:source: complete/src/main/java/com/acme/sample
-:test-source: complete/src/test/java/com/acme/sample
+:source: complete/src/main/java/com/example/app
+:test-source: complete/src/test/java/com/example/app
 
 == 🧑‍💻 -- Generating application module documentation
 
@@ -10,8 +10,8 @@ You'll
 === Steps -- Documentation
 
 1. Create an instance of `Documenter` by handing the `ApplicationModules` instance you have just created into its constructor.
-1. On that `Documenter` instance, call `createDocumentation()`.
-1. Run `ApplicationModularityTests`.
+2. On that `Documenter` instance, call `createDocumentation()`.
+3. Run `ApplicationModularityTests`.
 
 === Steps -- Documenting Spring Boot Configuration Properties
 
