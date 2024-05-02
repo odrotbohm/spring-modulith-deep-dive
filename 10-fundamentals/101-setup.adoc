@@ -57,7 +57,7 @@ endif::[]
 
 Add the `org.springframework:spring-modulith-starter-test` dependency in test scope to your `pom.xml`.
 
-ifndef:educates[]
+ifndef::educates[]
 [source, xml]
 ----
 <dependency>
