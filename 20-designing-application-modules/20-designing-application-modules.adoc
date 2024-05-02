@@ -147,7 +147,7 @@ endif::[]
 ifdef::educates[]
 [source,terminal:execute]
 ----
-command: ./mvnw -f ~/exercises/20-designing-application-modules/initial test
+command: mvnw test
 ----
 endif::[]
 
