@@ -29,15 +29,30 @@ endif::[]
 == 📖 -- jMolecules Fundamentals
 == 🧑‍💻 -- Add jMolecules to the project
 
-ifdef::educates[]
+ifndef::educates[]
 [TIP]
 endif::[]
+ifdef::educates[]
+[quote]
+____
+**Tip** +
 Use the Spring CLI's `jmolecules init` command to add the basic setup of jMolecules to your project.
+ifdef::educates[]
+____
+endif::[]
 
 == 📖 -- Avoiding Boilerplate Code with jMolecules Integrations
 == 🧑‍💻 -- Persisting Aggregates with JPA
 
-ifdef::educates[]
+ifndef::educates[]
 [TIP]
 endif::[]
+ifdef::educates[]
+[quote]
+____
+**Tip** +
+endif::[]
 Use the Spring CLI's `jmolecules add-aggregate` command to add an aggregate and supporting abstractions to the project.
+ifdef::educates[]
+____
+endif::[]

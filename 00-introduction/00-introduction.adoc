@@ -19,9 +19,17 @@ We use the following icons to represent different parts of the document
 ifndef::educates[]
 [WARNING]
 endif::[]
+ifdef::educates[]
+[quote]
+____
+**Warning** +
+endif::[]
 Most of the steps include fractions of the code to be added to a project.
 The code samples often have important parts folded (indicated by the `…` icon in the lower right corner if you hover over the code block).
 Be sure to use the clipboard icon to copy the whole content.
+ifdef::educates[]
+____
+endif::[]
 
 [[introduction.domain]]
 == The domain
