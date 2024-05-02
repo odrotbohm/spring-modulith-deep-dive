@@ -10,6 +10,8 @@
 You'll learn how to…
 
 * … create an application module within the application.
+* … bootstrap `ApplicationModules`.
+* … inspect the application module model on the command line.
 
 [[fundamentals.creating-modules.preparations]]
 == 👣 Preparations
