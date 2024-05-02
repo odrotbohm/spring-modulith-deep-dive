@@ -6,7 +6,7 @@ ifdef::educates[]
 command: |
     git stash &&
     git clean -dxf &&
-    git checkout 40-integration-testing.adoc
+    git checkout 40-integration-testing
 autostart: true
 hidden: true
 ----
