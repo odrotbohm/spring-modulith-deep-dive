@@ -7,6 +7,9 @@ ifndef::educates[]
 include::101-setup.adoc[leveloffset=+1]
 include::102-creating-modules.adoc[leveloffset=+1]
 
+endif:[]
+
+ifdef::educates[]
 [source, terminal:execute]
 ----
 command: |
@@ -32,8 +35,3 @@ hidden: true
 ----
 endif::[]
 
-ifdef::educates[]
-This is just a test of adding an image
-
-image::https://raw.githubusercontent.com/vmware-tanzu-learning/spring-academy-assets/main/courses/spring-modulith-deep-dive/images/domain.png[alt=domain]
-endif::[]
