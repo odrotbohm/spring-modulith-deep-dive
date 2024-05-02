@@ -8,9 +8,9 @@ ifdef::educates[]
 [source, terminal:execute]
 ----
 command: |
-    git stash &&
-    git clean -dxf &&
-    git checkout 20-designing-application-modules
+	git stash &&
+	git clean -dxf &&
+	git checkout 20-designing-application-modules
 autostart: true
 hidden: true
 ----
@@ -67,12 +67,12 @@ ifdef::educates[]
 ----
 file: ~/exercises/20-designing-application-modules/initial/src/main/java/com/example/app/order/OrderRepository.java
 text: |
-    package com.example.app.order;
+	package com.example.app.order;
 
-    import org.springframework.stereotype.Repository;
+	import org.springframework.stereotype.Repository;
 
-    @Repository
-    class OrderRepository {}
+	@Repository
+	class OrderRepository {}
 ----
 endif::[]
 
@@ -100,14 +100,14 @@ ifdef::educates[]
 ----
 file: ~/exercises/20-designing-application-modules/initial/src/main/java/com/example/app/order/OrderManagement.java
 text: |
-    import lombok.RequiredArgsConstructor;
+	import lombok.RequiredArgsConstructor;
 
-    @Component
-    @RequiredArgsConstructor
-    public class OrderManagement {
+	@Component
+	@RequiredArgsConstructor
+	public class OrderManagement {
 
-        private final OrderRepository repository;
-    }
+		private final OrderRepository repository;
+	}
 ----
 endif::[]
 
@@ -147,11 +147,11 @@ after: 0
 ----
 file: ~/exercises/20-designing-application-modules/initial/src/test/java/com/example/app/ApplicationModularityTests.java
 text: |
-    import com.example.app.order.OrderRepository;
+	import com.example.app.order.OrderRepository;
 
-    class ApplicationModularityTests {
+	class ApplicationModularityTests {
 
-        OrderRepository orderRepository;
+		OrderRepository orderRepository;
 ----
 
 [source, terminal:execute]
@@ -176,10 +176,10 @@ ifdef::educates[]
 [source, terminal:execute]
 ----
 command: |
-    mkdir -p src/main/java/com/example/app/order/persistence
-    mv src/main/java/com/example/app/order/OrderRepository.java src/main/java/com/example/app/order/persistence/
-    sed -i "s/package com\.example\.app\.order;/package com\.example\.app\.order\.persistence;/" src/main/java/com/example/app/order/persistence/OrderRepository.java
-    sed -i "s/import com\.example\.app\.order.\OrderRepository;/import com\.example\.app\.order\.persistence.\OrderRepository;/" src/test/java/com/example/app/ApplicationModularityTests.java
+	mkdir -p src/main/java/com/example/app/order/persistence
+	mv src/main/java/com/example/app/order/OrderRepository.java src/main/java/com/example/app/order/persistence/
+	sed -i "s/package com\.example\.app\.order;/package com\.example\.app\.order\.persistence;/" src/main/java/com/example/app/order/persistence/OrderRepository.java
+	sed -i "s/import com\.example\.app\.order.\OrderRepository;/import com\.example\.app\.order\.persistence.\OrderRepository;/" src/test/java/com/example/app/ApplicationModularityTests.java
 ----
 endif::[]
 

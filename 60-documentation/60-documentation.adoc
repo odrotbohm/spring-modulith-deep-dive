@@ -7,9 +7,9 @@ ifdef::educates[]
 [source, terminal:execute]
 ----
 command: |
-    git stash &&
-    git clean -dxf &&
-    git checkout 60-documentation
+	git stash &&
+	git clean -dxf &&
+	git checkout 60-documentation
 autostart: true
 hidden: true
 ----

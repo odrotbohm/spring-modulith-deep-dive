@@ -4,9 +4,9 @@ ifdef::educates[]
 [source, terminal:execute]
 ----
 command: |
-    git stash &&
-    git clean -dxf &&
-    git checkout 40-integration-testing
+	git stash &&
+	git clean -dxf &&
+	git checkout 40-integration-testing
 autostart: true
 hidden: true
 ----

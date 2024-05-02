@@ -38,10 +38,10 @@ command: mkdir -p src/test/java/com/example/app
 ----
 file: ~/exercises/10-fundamentals/initial/src/test/java/com/example/app/ApplicationModularityTests.java
 text: |
-    package com.example.app;
+	package com.example.app;
 
-    class ApplicationModularityTests {
-    }
+	class ApplicationModularityTests {
+	}
 ----
 endif::[]
 
@@ -54,9 +54,9 @@ ifndef::educates[]
 @Test
 void bootstrapsApplicationModules() {
 
-    var modules = ApplicationModules.of(Application.class);
+	var modules = ApplicationModules.of(Application.class);
 
-    System.out.println(modules);
+	System.out.println(modules);
 }
 ----
 endif::[]
@@ -75,19 +75,19 @@ after: 1
 file: ~/exercises/10-fundamentals/initial/src/test/java/com/example/app/ApplicationModularityTests.java
 text: |
 
-    import org.junit.jupiter.api.Test;
-    import org.springframework.modulith.core.ApplicationModules;
+	import org.junit.jupiter.api.Test;
+	import org.springframework.modulith.core.ApplicationModules;
 
-    class ApplicationModularityTests {
+	class ApplicationModularityTests {
 
-        @Test
-        void bootstrapsApplicationModules() {
+		@Test
+		void bootstrapsApplicationModules() {
 
-            var modules = ApplicationModules.of(Application.class);
+			var modules = ApplicationModules.of(Application.class);
 
-            System.out.println(modules);
-        }
-    }
+			System.out.println(modules);
+		}
+	}
 ----
 endif::[]
 
@@ -128,12 +128,12 @@ ifdef::educates[]
 ----
 file: ~/exercises/10-fundamentals/initial/src/main/java/com/example/app/order/OrderManagement.java
 text: |
-    package com.example.app.order;
+	package com.example.app.order;
 
-    import org.springframework.stereotype.Component;
+	import org.springframework.stereotype.Component;
 
-    @Component
-    public class OrderManagement {}
+	@Component
+	public class OrderManagement {}
 ----
 endif::[]
 

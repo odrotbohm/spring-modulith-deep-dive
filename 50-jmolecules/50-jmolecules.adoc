@@ -4,9 +4,9 @@ ifdef::educates[]
 [source, terminal:execute]
 ----
 command: |
-    git stash &&
-    git clean -dxf &&
-    git checkout 50-jmolecules
+	git stash &&
+	git clean -dxf &&
+	git checkout 50-jmolecules
 autostart: true
 hidden: true
 ----
