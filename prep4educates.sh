@@ -8,10 +8,10 @@ rm -rf $basedir
 for dir in [0-9][0-9]*/; do
 
     # Spring Academy Course expected folder structure
-    target="${basedir}/workshops/${dir}workshop/content"
+    target="${basedir}/workshops/${dir}workshop"
 
     # Create folder
-    mkdir -p $target
+    mkdir -p $target/content
 
     # Find all AsciiDoc files recursively
     find $dir -name "*.adoc" -type f | while read -r file; do
@@ -23,7 +23,10 @@ for dir in [0-9][0-9]*/; do
 
         # Convert DocBook to Markdown using Pandoc
         # -s to keep the primary headline
-        pandoc -s -f docbook -t markdown -o "${target}/${filename}.md"
+        pandoc -s -f docbook -t markdown -o "${target}/content/${filename}.md"
+
+        # Copy branches script
+        cp -r educates-files/* $target/
 
     done
 
