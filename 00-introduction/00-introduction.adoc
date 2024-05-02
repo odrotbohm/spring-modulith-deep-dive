@@ -16,7 +16,10 @@ We use the following icons to represent different parts of the document
 * 📖 -- Describes a section of contextual content, often referring to sections of the slide deck.
 * 💡 -- Summarizes the lab and often include ideas of how to take the code of the lab further.
 
-WARNING: Most of the steps include fractions of the code to be added to a project.
+ifndef::educates[]
+[WARNING]
+endif::[]
+Most of the steps include fractions of the code to be added to a project.
 The code samples often have important parts folded (indicated by the `…` icon in the lower right corner if you hover over the code block).
 Be sure to use the clipboard icon to copy the whole content.
 
