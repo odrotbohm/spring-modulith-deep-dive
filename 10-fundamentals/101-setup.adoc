@@ -99,7 +99,7 @@ command: mvnw dependency:list -Dsort | grep -v Download | grep modulith
 endif::[]
 
 See how the output lists the Spring Modulith dependencies in test scope.
-+
+
 [source, bash, subs="attributes+"]
 ----
 [INFO] org.springframework.modulith:spring-modulith-api:jar:{spring-modulith-version}:test -- module org.springframework.modulith.api [auto]
