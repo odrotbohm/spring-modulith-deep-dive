@@ -36,7 +36,7 @@ for dir in [0-9][0-9]*/; do
 done
 
 # Copy images to target folder
-asciidoctorbase="src/main/asciidoc"
+asciidoctorbase="src/docs/asciidoc"
 imagesdir="images"
 files=$(find $basedir -type f -name "*.md")
 
