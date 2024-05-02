@@ -16,6 +16,16 @@ You'll learn how to…
 
 Create a test class in the application's root package in `src/test/java` named `ApplicationModularityTests`.
 
+ifndef::educates[]
+[source, java]
+----
+package com.example.app;
+
+class ApplicationModularityTests {
+}
+----
+endif::[]
+
 ifdef::educates[]
 [source, terminal:execute]
 ----
@@ -34,6 +44,20 @@ text: |
 endif::[]
 
 Within that class, create a test case to create a new instance of `ApplicationModules` pointing to the root Spring Boot application class.
+Print the result of `ApplicationModularityTests.toString()` to the console.
+
+ifndef::educates[]
+[source, java]
+----
+@Test
+void bootstrapsApplicationModules() {
+
+    var modules = ApplicationModules.of(Application.class);
+
+    System.out.println(modules);
+}
+----
+endif::[]
 
 ifdef::educates[]
 [source, editor:select-matching-text]
@@ -65,7 +89,7 @@ text: |
 ----
 endif::[]
 
-Print the result of `ApplicationModularityTests.toString()` to the console.
+Execute the test and note, how the output stays empty at first.
 
 ifdef::educates[]
 [source, terminal:execute]
@@ -74,15 +98,13 @@ command: mvnw test
 ----
 endif::[]
 
-Note, how it stays empty at first.
-
 [source]
 ----
 [INFO] -------------------------------------------------------
 [INFO]  T E S T S
 [INFO] -------------------------------------------------------
 [INFO] Running com.example.app.ApplicationModularityTests
-16:20:25.394 [main] INFO com.tngtech.archunit.core.PluginLoader -- Detected Java version 17.0.7
+… [main] INFO com.tngtech.archunit.core.PluginLoader -- Detected Java version 17.0.7
 ----
 
 [[fundamentals.creating-modules.adding-a-module]]
@@ -130,7 +152,7 @@ Note that an application module named `Order` is listed, as well as `OrderManage
 [INFO]  T E S T S
 [INFO] -------------------------------------------------------
 [INFO] Running com.example.app.ApplicationModularityTests
-16:20:37.029 [main] INFO com.tngtech.archunit.core.PluginLoader -- Detected Java version 17.0.7
+… [main] INFO com.tngtech.archunit.core.PluginLoader -- Detected Java version 17.0.7
 # Order
 > Logical name: order
 > Base package: com.example.app.order
