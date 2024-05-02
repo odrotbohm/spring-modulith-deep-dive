@@ -1,15 +1,6 @@
 [[fundamentals.setup]]
 = 🧑‍💻 Spring Modulith Setup
 
-ifdef::educates[]
-[source, editor:open-file]
-----
-file: ~/exercises/10-fundamentals/initial/src/main/java/com/example/app/Application.java
-autostart: true
-hidden: true
-----
-endif::[]
-
 [[fundamentals.setup.objectives]]
 == 🎯 Objectives
 
@@ -22,30 +13,72 @@ You'll learn how to…
 [[fundamentals.setup.steps]]
 == 👣 Build setup
 
-1. Open `pom.xml` and add the Spring Modulith BOM in the `<dependencyManagement />` section.
-+
-[source, xml, subs="attributes+"]
+Open `pom.xml` and add the Spring Modulith BOM in the `<dependencyManagement />` section.
+
+ifdef::educates[]
+[source,editor:select-matching-text]
 ----
-<dependency>
-	<groupId>org.springframework.modulith</groupId>
-	<artifactId>spring-modulith-bom</artifactId>
-	<version>{spring-modulith-version}</version>
-	<type>pom</type>
-	<scope>import</scope>
-</dependency>
+file: ~/exercises/10-fundamentals/initial/pom.xml
+text: "<dependencyManagement>"
+before: 0
+after: 4
 ----
-2. Add the `org.springframework:spring-modulith-starter-test` dependency in test scope to your `pom.xml`.
-+
-[source, xml]
+endif::[]
+
+ifdef::educates[]
+[source,editor:replace-text-selection]
 ----
-<dependency>
-	<groupId>org.springframework.modulith</groupId>
-	<artifactId>spring-modulith-starter-test</artifactId>
-	<scope>test</scope>
-</dependency>
+file: ~/exercises/10-fundamentals/initial/pom.xml
+text: |
+    	<dependencyManagement>
+    	    <dependencies>
+    	      <dependency>
+    	        <groupId>org.springframework.modulith</groupId>
+    	        <artifactId>spring-modulith-bom</artifactId>
+    	        <version>1.0.0</version>
+    	        <type>pom</type>
+    	        <scope>import</scope>
+    	      </dependency>
+    	    </dependencies>
+        </dependencyManagement>
 ----
-3. Run `./mvnw dependency:list -Dsort`.
-4. See how the output lists the Spring Modulith dependencies in test scope.
+endif::[]
+
+Add the `org.springframework:spring-modulith-starter-test` dependency in test scope to your `pom.xml`.
+
+ifdef::educates[]
+[source,editor:select-matching-text]
+----
+file: ~/exercises/10-fundamentals/initial/pom.xml
+text: "<!-- Spring Modulith -->"
+before: 0
+after: 0
+----
+endif::[]
+
+ifdef::educates[]
+[source,editor:replace-text-selection]
+----
+file: ~/exercises/10-fundamentals/initial/pom.xml
+text: |
+    		<dependency>
+              <groupId>org.springframework.modulith</groupId>
+              <artifactId>spring-modulith-starter-test</artifactId>
+              <scope>test</scope>
+    		</dependency>
+----
+endif::[]
+
+Run `./mvnw dependency:list -Dsort`.
+
+ifdef::educates[]
+[source,terminal:execute]
+----
+command: mvnw dependency:list -Dsort | grep -v Download | grep modulith
+----
+endif::[]
+
+See how the output lists the Spring Modulith dependencies in test scope.
 +
 [source, bash, subs="attributes+"]
 ----

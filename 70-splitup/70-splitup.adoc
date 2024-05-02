@@ -1,6 +1,36 @@
 [[splitup]]
 = Splitting the Modulith
 
+ifdef::educates[]
+[source,terminal:execute]
+----
+command: |
+    git stash &&
+    git clean -dxf &&
+    git checkout 70-splitup
+autostart: true
+hidden: true
+----
+endif::[]
+
+ifdef::educates[]
+[source,terminal:execute-all]
+----
+command: cd ~/exercises/70-splitup/initial
+autostart: true
+hidden: true
+----
+endif::[]
+
+ifdef::educates[]
+[source,dashboard:open-dashboard]
+----
+name: Editor
+autostart: true
+hidden: true
+----
+endif::[]
+
 == Introduction
 
 image::images/splitup.jpeg[]

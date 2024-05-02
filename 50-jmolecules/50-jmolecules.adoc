@@ -1,5 +1,35 @@
 = Architecturally-Evident Code Using jMolecules
 
+ifdef::educates[]
+[source,terminal:execute]
+----
+command: |
+    git stash &&
+    git clean -dxf &&
+    git checkout 50-jmolecules
+autostart: true
+hidden: true
+----
+endif::[]
+
+ifdef::educates[]
+[source,terminal:execute-all]
+----
+command: cd ~/exercises/50-jmolecules/initial
+autostart: true
+hidden: true
+----
+endif::[]
+
+ifdef::educates[]
+[source,dashboard:open-dashboard]
+----
+name: Editor
+autostart: true
+hidden: true
+----
+endif::[]
+
 == 📖 -- jMolecules Fundamentals
 == 🧑‍💻 -- Add jMolecules to the project
 

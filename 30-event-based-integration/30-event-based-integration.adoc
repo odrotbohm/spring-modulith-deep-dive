@@ -4,6 +4,36 @@
 :source: complete/src/main/java/com/example/app
 :snippets-source: complete/src/test/java/snippets
 
+ifdef::educates[]
+[source,terminal:execute]
+----
+command: |
+    git stash &&
+    git clean -dxf &&
+    git checkout 30-event-based-integration
+autostart: true
+hidden: true
+----
+endif::[]
+
+ifdef::educates[]
+[source,terminal:execute-all]
+----
+command: cd ~/exercises/30-event-based-integration/initial
+autostart: true
+hidden: true
+----
+endif::[]
+
+ifdef::educates[]
+[source,dashboard:open-dashboard]
+----
+name: Editor
+autostart: true
+hidden: true
+----
+endif::[]
+
 [[events.imperative]]
 == 🧑‍💻 Downsides of Imperative Interaction
 

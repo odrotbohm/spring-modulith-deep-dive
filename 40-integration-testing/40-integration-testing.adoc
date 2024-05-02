@@ -1,5 +1,35 @@
 = Integration testing modules
 
+ifdef::educates[]
+[source,terminal:execute]
+----
+command: |
+    git stash &&
+    git clean -dxf &&
+    git checkout 40-integration-testing.adoc
+autostart: true
+hidden: true
+----
+endif::[]
+
+ifdef::educates[]
+[source,terminal:execute-all]
+----
+command: cd ~/exercises/40-integration-testing/initial
+autostart: true
+hidden: true
+----
+endif::[]
+
+ifdef::educates[]
+[source,dashboard:open-dashboard]
+----
+name: Editor
+autostart: true
+hidden: true
+----
+endif::[]
+
 == 🧑‍💻 -- Running Application Module-Specific Integration Tests
 
 == 🧑‍💻 -- Testing more complex flows using `Scenarios`

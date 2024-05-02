@@ -8,3 +8,33 @@ include::101-setup.adoc[leveloffset=+1]
 include::102-creating-modules.adoc[leveloffset=+1]
 
 endif::[]
+
+ifdef::educates[]
+[source,terminal:execute]
+----
+command: |
+    git stash &&
+    git clean -dxf &&
+    git checkout 10-fundamentals
+autostart: true
+hidden: true
+----
+endif::[]
+
+ifdef::educates[]
+[source,terminal:execute-all]
+----
+command: cd ~/exercises/10-fundamentals/initial
+autostart: true
+hidden: true
+----
+endif::[]
+
+ifdef::educates[]
+[source,dashboard:open-dashboard]
+----
+name: Editor
+autostart: true
+hidden: true
+----
+endif::[]
