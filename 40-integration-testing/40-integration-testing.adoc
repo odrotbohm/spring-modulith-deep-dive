@@ -15,7 +15,7 @@ endif::[]
 ifdef::educates[]
 [source,terminal:execute-all]
 ----
-command: cd ~/exercises/40-integration-testing/initial
+command: cd ~/exercises/40-integration-testing/initial && clear
 autostart: true
 hidden: true
 ----

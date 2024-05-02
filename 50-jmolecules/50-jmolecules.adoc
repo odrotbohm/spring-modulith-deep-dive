@@ -15,7 +15,7 @@ endif::[]
 ifdef::educates[]
 [source,terminal:execute-all]
 ----
-command: cd ~/exercises/50-jmolecules/initial
+command: cd ~/exercises/50-jmolecules/initial && clear
 autostart: true
 hidden: true
 ----

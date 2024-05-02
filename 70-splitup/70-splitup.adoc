@@ -16,7 +16,7 @@ endif::[]
 ifdef::educates[]
 [source,terminal:execute-all]
 ----
-command: cd ~/exercises/70-splitup/initial
+command: cd ~/exercises/70-splitup/initial && clear
 autostart: true
 hidden: true
 ----

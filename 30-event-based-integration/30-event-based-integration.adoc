@@ -19,7 +19,7 @@ endif::[]
 ifdef::educates[]
 [source,terminal:execute-all]
 ----
-command: cd ~/exercises/30-event-based-integration/initial
+command: cd ~/exercises/30-event-based-integration/initial && clear
 autostart: true
 hidden: true
 ----

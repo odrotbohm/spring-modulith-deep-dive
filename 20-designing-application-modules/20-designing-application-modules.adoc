@@ -19,7 +19,7 @@ endif::[]
 ifdef::educates[]
 [source,terminal:execute-all]
 ----
-command: cd ~/exercises/20-designing-application-modules/initial
+command: cd ~/exercises/20-designing-application-modules/initial && clear
 autostart: true
 hidden: true
 ----
@@ -166,7 +166,6 @@ Introduce a package named `order.persistence` and move `OrderRepository` to that
 ifdef::educates[]
 [source,terminal:execute]
 ----
-command: |
 command: |
     mkdir -p src/main/java/com/example/app/order/persistence
     mv src/main/java/com/example/app/order/OrderRepository.java src/main/java/com/example/app/order/persistence/

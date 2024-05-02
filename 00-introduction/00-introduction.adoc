@@ -30,6 +30,10 @@ As the focus of Spring Modulith is creating a high-level functional structure an
 * An order management module that contains orders consisting of line items referring to the products contained in the catalog.
 * An inventory management that keeps track of the stock for each product.
 
+ifdef::educates[]
+![img](https://raw.githubusercontent.com/vmware-tanzu-learning/spring-academy-assets/main/courses/spring-modulith-deep-dive/images/domain.png)
+endif::[]
+
 The primary use case we will investigate in its implications on both the structural, consistency and interaction arrangement is the following: when an order is completed (i.e., flips a certain state), a variety of functionality will have to be triggered:
 
 * The inventory needs to update its stock to reflect the products referred to by the items contained in the order leaving the warehouse.
