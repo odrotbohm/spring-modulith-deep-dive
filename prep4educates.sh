@@ -7,6 +7,8 @@ rm -rf $basedir
 # Scan folders starting with two digits
 for dir in [0-9][0-9]*/; do
 
+    [[ $(basename $dir) == "00-introduction" ]] && continue
+
     # Spring Academy Course expected folder structure
     target="${basedir}/workshops/${dir}workshop"
 
@@ -21,6 +23,7 @@ for dir in [0-9][0-9]*/; do
         # Convert AsciiDoc to DocBook using Asciidoctor
         asciidoctor -b docbook -d book \
             -a educates \
+            -a tabsize=4 \
             -a imagesdir=images \
             -o - "$file" | \
 
