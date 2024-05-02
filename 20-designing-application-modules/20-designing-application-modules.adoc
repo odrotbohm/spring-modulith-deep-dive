@@ -167,10 +167,11 @@ ifdef::educates[]
 [source,terminal:execute]
 ----
 command: |
+command: |
     mkdir -p src/main/java/com/example/app/order/persistence
-    m src/main/java/com/example/app/order/persistence/OrderRepository.java
-    sed -i "s/package com\.example\.app\.order;/package com\.example\.app\.order\.persistence;/ src/main/java/com/example/app/order/persistence/OrderRepository.java
-    sed -i "s/import com\.example\.app\.order.\OrderRepository;/import com\.example\.app\.order\.persistence.\OrderRepository;/ src/test/java/com/example/app/ApplicationModularityTests.java
+    mv src/main/java/com/example/app/order/OrderRepository.java src/main/java/com/example/app/order/persistence/
+    sed -i "s/package com\.example\.app\.order;/package com\.example\.app\.order\.persistence;/" src/main/java/com/example/app/order/persistence/OrderRepository.java
+    sed -i "s/import com\.example\.app\.order.\OrderRepository;/import com\.example\.app\.order\.persistence.\OrderRepository;/" src/test/java/com/example/app/ApplicationModularityTests.java
 ----
 endif::[]
 
@@ -191,7 +192,7 @@ text: public class OrderRepository
 ----
 endif::[]
 
-Re-run `ApplicationModularityTests` and see how the output shows that `OrderRepository` is still considered an internal component (the leading `o` in front of it) as it does not reside in the API package.
+Re-run `ApplicationModularityTests`.
 
 ifdef::educates[]
 [source,terminal:execute]
@@ -200,8 +201,9 @@ command: mvnw test
 ----
 endif::[]
 
+See how the output shows that `OrderRepository` is still considered an internal component (the leading `o` in front of it) as it does not reside in the API package.
 +
-[source]
+[source, text]
 ----
 …
 # Order
