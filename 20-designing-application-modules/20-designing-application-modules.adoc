@@ -4,6 +4,32 @@
 :source: complete/src/main/java/com/example/app
 :test-source: complete/src/test/java/com/example/app
 
+ifdef::educates[]
+[source, terminal:execute]
+----
+command: |
+    git stash &&
+    git clean -dxf &&
+    git checkout 20-designing-application-modules
+autostart: true
+hidden: true
+----
+
+[source, terminal:execute-all]
+----
+command: cd ~/exercises/20-designing-application-modules/initial && clear
+autostart: true
+hidden: true
+----
+
+[source, dashboard:open-dashboard]
+----
+name: Editor
+autostart: true
+hidden: true
+----
+endif::[]
+
 [[module-design.module-api-defaults]]
 == 📖 Fundamentals of Application Module design
 
@@ -24,8 +50,9 @@ You'll learn how to…
 [[module-design.control-visibility.package-protected-types]]
 === 👣 Hiding application module internals by using the package scope
 
-1. Add an `OrderRepository` class in default scope to the `order` package
-+
+Add an `OrderRepository` class in default scope to the `order` package
+
+ifndef::educates[]
 [source, java]
 ----
 import org.springframework.stereotype.Repository;
@@ -33,16 +60,66 @@ import org.springframework.stereotype.Repository;
 @Repository
 class OrderRepository {}
 ----
+endif::[]
 
-2. Create a Spring bean reference to the `OrderRepository` in `OrderManagement`.
-+
+ifdef::educates[]
+[source, editor:append-lines-to-file]
+----
+file: ~/exercises/20-designing-application-modules/initial/src/main/java/com/example/app/order/OrderRepository.java
+text: |
+    package com.example.app.order;
+
+    import org.springframework.stereotype.Repository;
+
+    @Repository
+    class OrderRepository {}
+----
+endif::[]
+
+Create a Spring bean reference to the `OrderRepository` in `OrderManagement`.
+
+ifndef::educates[]
 [source, java]
 ----
 include::{source}/order/OrderManagement.java[tags=class]
 ----
+endif::[]
 
-3. Re-run `ApplicationModularityTests` and see how the output shows that `OrderRepository` is detected as internal module component (the `o` in front of the type name).
-+
+ifdef::educates[]
+[source, editor:select-matching-text]
+----
+file: ~/exercises/20-designing-application-modules/initial/src/main/java/com/example/app/order/OrderManagement.java
+text: "public class OrderManagement {}"
+before: 2
+after: 0
+----
+endif::[]
+
+ifdef::educates[]
+[source, editor:replace-text-selection]
+----
+file: ~/exercises/20-designing-application-modules/initial/src/main/java/com/example/app/order/OrderManagement.java
+text: |
+    import lombok.RequiredArgsConstructor;
+
+    @Component
+    @RequiredArgsConstructor
+    public class OrderManagement {
+
+        private final OrderRepository repository;
+    }
+----
+endif::[]
+
+Re-run `ApplicationModularityTests` and see how the output shows that `OrderRepository` is detected as internal module component (the `o` in front of the type name).
+
+ifdef::educates[]
+[source, terminal:execute]
+----
+command: mvnw test
+----
+endif::[]
+
 [source]
 ----
 …
@@ -54,14 +131,85 @@ include::{source}/order/OrderManagement.java[tags=class]
   + ….OrderManagement
   o ….OrderRepository
 ----
-4. Try to add a reference to `OrderRepository` from `ApplicationModularityTests` and see how the compiler prevents that.
+Try to add a reference to `OrderRepository` from `ApplicationModularityTests` and see how the compiler prevents that.
+
+ifdef::educates[]
+[source, editor:select-matching-text]
+----
+file: ~/exercises/20-designing-application-modules/initial/src/test/java/com/example/app/ApplicationModularityTests.java
+
+text: "class ApplicationModularityTests {"
+before: 0
+after: 0
+----
+
+[source, editor:replace-text-selection]
+----
+file: ~/exercises/20-designing-application-modules/initial/src/test/java/com/example/app/ApplicationModularityTests.java
+text: |
+    import com.example.app.order.OrderRepository;
+
+    class ApplicationModularityTests {
+
+        OrderRepository orderRepository;
+----
+
+[source, terminal:execute]
+----
+command: mvnw test
+----
+endif::[]
+
+[source]
+----
+[INFO] -------------------------------------------------------------
+[ERROR] COMPILATION ERROR :
+[INFO] -------------------------------------------------------------
+[ERROR] /home/eduk8s/exercises/20-designing-application-modules/initial/src/test/java/com/example/app/ApplicationModularityTests.java:[24,29] com.example.app.order.OrderRepository is not public in com.example.app.order; cannot be accessed from outside package
+----
 
 [[module-design.control-visibility.nested-packages]]
 === 👣 Hiding components in nested packages
-1. Introduce a package named `order.persistence` and move `OrderRepository` to that package.
+Introduce a package named `order.persistence` and move `OrderRepository` to that package.
+
+ifdef::educates[]
+[source, terminal:execute]
+----
+command: |
+    mkdir -p src/main/java/com/example/app/order/persistence
+    mv src/main/java/com/example/app/order/OrderRepository.java src/main/java/com/example/app/order/persistence/
+    sed -i "s/package com\.example\.app\.order;/package com\.example\.app\.order\.persistence;/" src/main/java/com/example/app/order/persistence/OrderRepository.java
+    sed -i "s/import com\.example\.app\.order.\OrderRepository;/import com\.example\.app\.order\.persistence.\OrderRepository;/" src/test/java/com/example/app/ApplicationModularityTests.java
+----
+endif::[]
+
 To resolve the compiler error this creates in `OrderManagement`, change the visibility of the repository type to `public`.
-2. Re-run `ApplicationModularityTests` and see how the output shows that `OrderRepository` is still considered an internal component (the leading `o` in front of it) as it does not reside in the API package.
-+
+
+ifdef::educates[]
+[source, editor:select-matching-text]
+----
+file: ~/exercises/20-designing-application-modules/initial/src/main/java/com/example/app/order/persistence/OrderRepository.java
+text: class OrderRepository
+----
+
+[source, editor:replace-text-selection]
+----
+file: ~/exercises/20-designing-application-modules/initial/src/main/java/com/example/app/order/persistence/OrderRepository.java
+text: public class OrderRepository
+----
+endif::[]
+
+Re-run `ApplicationModularityTests`.
+
+ifdef::educates[]
+[source, terminal:execute]
+----
+command: mvnw test
+----
+endif::[]
+
+See how the output shows that `OrderRepository` is still considered an internal component (the leading `o` in front of it) as it does not reside in the API package.
+
 [source]
 ----
 …

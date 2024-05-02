@@ -3,6 +3,32 @@
 :source: complete/src/main/java/com/example/app
 :test-source: complete/src/test/java/com/example/app
 
+ifdef::educates[]
+[source, terminal:execute]
+----
+command: |
+    git stash &&
+    git clean -dxf &&
+    git checkout 60-documentation
+autostart: true
+hidden: true
+----
+
+[source, terminal:execute-all]
+----
+command: cd ~/exercises/60-documentation/initial && clear
+autostart: true
+hidden: true
+----
+
+[source, dashboard:open-dashboard]
+----
+name: Editor
+autostart: true
+hidden: true
+----
+endif::[]
+
 == 🧑‍💻 -- Generating application module documentation
 
 You'll

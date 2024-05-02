@@ -4,6 +4,32 @@
 :source: complete/src/main/java/com/example/app
 :snippets-source: complete/src/test/java/snippets
 
+ifdef::educates[]
+[source, terminal:execute]
+----
+command: |
+    git stash &&
+    git clean -dxf &&
+    git checkout 30-event-based-integration
+autostart: true
+hidden: true
+----
+
+[source, terminal:execute-all]
+----
+command: cd ~/exercises/30-event-based-integration/initial && clear
+autostart: true
+hidden: true
+----
+
+[source, dashboard:open-dashboard]
+----
+name: Editor
+autostart: true
+hidden: true
+----
+endif::[]
+
 [[events.imperative]]
 == 🧑‍💻 Downsides of Imperative Interaction
 
@@ -37,7 +63,7 @@ public record OrderCompleted() {}
 2. In `OrderManagement` remove the dependencies to the `EmailSender` and the `Inventory`.
 Add a dependency to `ApplicationEventPublisher` instead and use it in a method named `complete()` to publish an instance of `OrderCompleted` instead of actively invoking methods on the just removed dependencies.
 +
-[source,java,indent=0]
+[source, java,indent=0]
 ----
 private final ApplicationEventPublisher events;
 
@@ -54,7 +80,7 @@ void complete(Order order) {
 3. In `InventoryManagement`, a method annotated with `@EventListener` to receive `OrderCompleted` events and delegate to the already existing `updateStockFor(…)` method.
 Use the reference to `OrderManagement` to look up the order to be processed by using the identifier contained in the event.
 +
-[source,java]
+[source, java]
 ----
 @EventListener
 void on(OrderCompleted event) {
@@ -101,7 +127,7 @@ Let us move on investigating what happens in case one of the listeners fails:
 
 1. Change the processing of the in `Inventory` to throw a `RuntimeException`.
 +
-[source,java]
+[source, java]
 ----
 public void updateStockFor(Order order) {
 	log.info("Updating stock for order {}.", order.getId());
