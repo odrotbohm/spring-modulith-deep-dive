@@ -7,8 +7,14 @@ rm -rf $basedir
 # Scan folders starting with two digits
 for dir in [0-9][0-9]*/; do
 
-    [[ $(basename $dir) == "00-introduction" ]] && continue
+#    [[ $(basename $dir) == "00-introduction" ]] && continue
 
+    # Move setup files
+    target=${basedir}/workshops/${dir}
+    mkdir -p $target
+    cp -r .educates/files/* $target
+
+    # Move content files
     # Spring Academy Course expected folder structure
     target="${basedir}/workshops/${dir}workshop"
 
@@ -30,9 +36,6 @@ for dir in [0-9][0-9]*/; do
         # Convert DocBook to Markdown using Pandoc
         # -s to keep the primary headline
         pandoc -s -f docbook -t markdown -o "${target}/content/${filename}.md"
-
-        # Copy branches script
-        cp -r educates-files/* $target/
 
     done
 
