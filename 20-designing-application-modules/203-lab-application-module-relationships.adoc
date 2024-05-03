@@ -1,0 +1,21 @@
+[[module-design.relationships]]
+= 🧑‍💻 Establishing relationships between modules
+
+[[module-design.relationships.objectives]]
+== 🎯 Objectives
+
+You'll learn how to…
+
+* … establish relationships between modules via Spring bean references
+* … detect invalid dependencies via a JUnit-based architectural fitness function
+
+[[module-design.relationships.managing-type-relationships]]
+== 👣 Managing type relationships
+
+- Introduce inventory
+- Create `Inventory`
+- Add constructor argument of type `OrderManagement`
+- add verify()
+- Run test -> green
+- Change constructor argument to `OrderRepository` -> red as it's an internal component
+
