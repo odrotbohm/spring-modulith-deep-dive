@@ -55,9 +55,7 @@ text: "public class OrderManagement {}"
 before: 2
 after: 0
 ----
-endif::[]
 
-ifdef::educates[]
 [source, editor:replace-text-selection]
 ----
 file: ~/exercises/src/main/java/com/example/app/order/OrderManagement.java
@@ -158,6 +156,17 @@ text: class OrderRepository
 ----
 file: ~/exercises/src/main/java/com/example/app/order/persistence/OrderRepository.java
 text: public class OrderRepository
+----
+endif::[]
+
+You also need to update the import statement in each of the classes that reference `OrderRepository`.
+
+ifdef::educates[]
+[source, terminal:execute]
+----
+command: |
+	sed -i "s/import com\.example\.app\.order.\OrderRepository;/import com\.example\.app\.order\.persistence.\OrderRepository;/" src/test/java/com/example/app/ApplicationModularityTests.java
+	sed -i "s/@Component/import com\.example\.app\.order\.persistence.\OrderRepository;\n\n@Component/" src/main/java/com/example/app/order/OrderManagement.java
 ----
 endif::[]
 
