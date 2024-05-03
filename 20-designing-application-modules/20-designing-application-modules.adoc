@@ -5,24 +5,16 @@
 :test-source: complete/src/test/java/com/example/app
 
 ifdef::educates[]
-[source, terminal:execute]
-----
-command: |
-	git stash &&
-	git clean -dxf &&
-	git checkout 20-designing-application-modules
-autostart: true
-hidden: true
-----
-
 [source, terminal:execute-all]
 ----
-command: cd ~/exercises/20-designing-application-modules/initial && clear
+command: cd ~/exercises && clear
 autostart: true
 hidden: true
 ----
+endif::[]
 
-[source, dashboard:open-dashboard]
+ifdef::educates[]
+[source, dashboard:reload-dashboard]
 ----
 name: Editor
 autostart: true
@@ -65,7 +57,7 @@ endif::[]
 ifdef::educates[]
 [source, editor:append-lines-to-file]
 ----
-file: ~/exercises/20-designing-application-modules/initial/src/main/java/com/example/app/order/OrderRepository.java
+file: ~/exercises/src/main/java/com/example/app/order/OrderRepository.java
 text: |
 	package com.example.app.order;
 
@@ -88,7 +80,7 @@ endif::[]
 ifdef::educates[]
 [source, editor:select-matching-text]
 ----
-file: ~/exercises/20-designing-application-modules/initial/src/main/java/com/example/app/order/OrderManagement.java
+file: ~/exercises/src/main/java/com/example/app/order/OrderManagement.java
 text: "public class OrderManagement {}"
 before: 2
 after: 0
@@ -98,7 +90,7 @@ endif::[]
 ifdef::educates[]
 [source, editor:replace-text-selection]
 ----
-file: ~/exercises/20-designing-application-modules/initial/src/main/java/com/example/app/order/OrderManagement.java
+file: ~/exercises/src/main/java/com/example/app/order/OrderManagement.java
 text: |
 	import lombok.RequiredArgsConstructor;
 
@@ -136,7 +128,7 @@ Try to add a reference to `OrderRepository` from `ApplicationModularityTests` an
 ifdef::educates[]
 [source, editor:select-matching-text]
 ----
-file: ~/exercises/20-designing-application-modules/initial/src/test/java/com/example/app/ApplicationModularityTests.java
+file: ~/exercises/src/test/java/com/example/app/ApplicationModularityTests.java
 
 text: "class ApplicationModularityTests {"
 before: 0
@@ -145,7 +137,7 @@ after: 0
 
 [source, editor:replace-text-selection]
 ----
-file: ~/exercises/20-designing-application-modules/initial/src/test/java/com/example/app/ApplicationModularityTests.java
+file: ~/exercises/src/test/java/com/example/app/ApplicationModularityTests.java
 text: |
 	import com.example.app.order.OrderRepository;
 
@@ -160,7 +152,7 @@ command: mvnw test
 ----
 endif::[]
 
-[source]
+[source, bash]
 ----
 [INFO] -------------------------------------------------------------
 [ERROR] COMPILATION ERROR :
@@ -188,13 +180,13 @@ To resolve the compiler error this creates in `OrderManagement`, change the visi
 ifdef::educates[]
 [source, editor:select-matching-text]
 ----
-file: ~/exercises/20-designing-application-modules/initial/src/main/java/com/example/app/order/persistence/OrderRepository.java
+file: ~/exercises/src/main/java/com/example/app/order/persistence/OrderRepository.java
 text: class OrderRepository
 ----
 
 [source, editor:replace-text-selection]
 ----
-file: ~/exercises/20-designing-application-modules/initial/src/main/java/com/example/app/order/persistence/OrderRepository.java
+file: ~/exercises/src/main/java/com/example/app/order/persistence/OrderRepository.java
 text: public class OrderRepository
 ----
 endif::[]

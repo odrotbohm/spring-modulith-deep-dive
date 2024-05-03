@@ -5,24 +5,16 @@
 :snippets-source: complete/src/test/java/snippets
 
 ifdef::educates[]
-[source, terminal:execute]
-----
-command: |
-	git stash &&
-	git clean -dxf &&
-	git checkout 30-event-based-integration
-autostart: true
-hidden: true
-----
-
 [source, terminal:execute-all]
 ----
-command: cd ~/exercises/30-event-based-integration/initial && clear
+command: cd ~/exercises && clear
 autostart: true
 hidden: true
 ----
+endif::[]
 
-[source, dashboard:open-dashboard]
+ifdef::educates[]
+[source, dashboard:reload-dashboard]
 ----
 name: Editor
 autostart: true
