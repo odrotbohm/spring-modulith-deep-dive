@@ -7,6 +7,9 @@ ifndef::educates[]
 include::101-setup.adoc[leveloffset=+1]
 include::102-creating-modules.adoc[leveloffset=+1]
 
+endif::[]
+
+ifdef::educates[]
 [source, terminal:execute-all]
 ----
 command: cd ~/exercises && clear
