@@ -1,6 +1,9 @@
 #!/bin/bash
 
+script="$0"
+scriptDir="$(dirname "$script")"
 basedir="target/educates"
+springModulithVersion=$($scriptDir/../mvnw help:evaluate -Dexpression=spring-modulith.version -q -DforceStdout)
 
 rm -rf $basedir
 
@@ -31,6 +34,7 @@ for dir in [0-9][0-9]*/; do
             -a educates \
             -a tabsize=4 \
             -a imagesdir=images \
+            -a spring-modulith-version=$springModulithVersion \
             -o - "$file" | \
 
         # Convert DocBook to Markdown using Pandoc
