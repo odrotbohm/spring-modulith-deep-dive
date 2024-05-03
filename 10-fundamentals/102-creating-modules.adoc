@@ -36,7 +36,7 @@ command: mkdir -p src/test/java/com/example/app
 
 [source, editor:append-lines-to-file]
 ----
-file: ~/exercises/10-fundamentals/initial/src/test/java/com/example/app/ApplicationModularityTests.java
+file: ~/exercises/src/test/java/com/example/app/ApplicationModularityTests.java
 text: |
 	package com.example.app;
 
@@ -64,7 +64,7 @@ endif::[]
 ifdef::educates[]
 [source, editor:select-matching-text]
 ----
-file: ~/exercises/10-fundamentals/initial/src/test/java/com/example/app/ApplicationModularityTests.java
+file: ~/exercises/src/test/java/com/example/app/ApplicationModularityTests.java
 text: "class ApplicationModularityTests {"
 before: 0
 after: 1
@@ -72,7 +72,7 @@ after: 1
 
 [source, editor:replace-text-selection]
 ----
-file: ~/exercises/10-fundamentals/initial/src/test/java/com/example/app/ApplicationModularityTests.java
+file: ~/exercises/src/test/java/com/example/app/ApplicationModularityTests.java
 text: |
 
 	import org.junit.jupiter.api.Test;
@@ -100,7 +100,7 @@ command: mvnw test
 ----
 endif::[]
 
-[source]
+[source, bash]
 ----
 [INFO] -------------------------------------------------------
 [INFO]  T E S T S
@@ -126,7 +126,7 @@ Add a public type `OrderManagement` in that package.
 ifdef::educates[]
 [source, editor:append-lines-to-file]
 ----
-file: ~/exercises/10-fundamentals/initial/src/main/java/com/example/app/order/OrderManagement.java
+file: ~/exercises/src/main/java/com/example/app/order/OrderManagement.java
 text: |
 	package com.example.app.order;
 
@@ -148,7 +148,7 @@ endif::[]
 
 Note that an application module named `Order` is listed, as well as `OrderManagement` as public component.
 
-[source]
+[source, bash]
 ----
 [INFO] -------------------------------------------------------
 [INFO]  T E S T S

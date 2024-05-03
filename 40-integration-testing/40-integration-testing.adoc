@@ -1,24 +1,14 @@
 = Integration testing modules
 
 ifdef::educates[]
-[source, terminal:execute]
-----
-command: |
-	git stash &&
-	git clean -dxf &&
-	git checkout 40-integration-testing
-autostart: true
-hidden: true
-----
-
 [source, terminal:execute-all]
 ----
-command: cd ~/exercises/40-integration-testing/initial && clear
+command: cd ~/exercises && clear
 autostart: true
 hidden: true
 ----
 
-[source, dashboard:open-dashboard]
+[source, dashboard:reload-dashboard]
 ----
 name: Editor
 autostart: true

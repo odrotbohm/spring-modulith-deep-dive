@@ -21,7 +21,7 @@ ifndef::educates[]
 <dependency>
 	<groupId>org.springframework.modulith</groupId>
 	<artifactId>spring-modulith-bom</artifactId>
-	<version>{spring-modulith-version}</version>
+	<version>${spring-modulith.version}</version>
 	<type>pom</type>
 	<scope>import</scope>
 </dependency>
@@ -31,7 +31,7 @@ endif::[]
 ifdef::educates[]
 [source, editor:select-matching-text]
 ----
-file: ~/exercises/10-fundamentals/initial/pom.xml
+file: ~/exercises/pom.xml
 text: "<dependencyManagement>"
 before: 0
 after: 4
@@ -39,7 +39,7 @@ after: 4
 
 [source, editor:replace-text-selection]
 ----
-file: ~/exercises/10-fundamentals/initial/pom.xml
+file: ~/exercises/pom.xml
 text: |
 		<dependencyManagement>
 			<dependencies>
@@ -71,7 +71,7 @@ endif::[]
 ifdef::educates[]
 [source, editor:select-matching-text]
 ----
-file: ~/exercises/10-fundamentals/initial/pom.xml
+file: ~/exercises/pom.xml
 text: "<!-- Spring Modulith -->"
 before: 0
 after: 0
@@ -79,7 +79,7 @@ after: 0
 
 [source, editor:replace-text-selection]
 ----
-file: ~/exercises/10-fundamentals/initial/pom.xml
+file: ~/exercises/pom.xml
 text: |
 			<dependency>
 				<groupId>org.springframework.modulith</groupId>

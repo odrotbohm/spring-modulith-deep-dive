@@ -7,31 +7,17 @@ ifndef::educates[]
 include::101-setup.adoc[leveloffset=+1]
 include::102-creating-modules.adoc[leveloffset=+1]
 
-endif::[]
-
-ifdef::educates[]
-[source, terminal:execute]
-----
-command: |
-	git stash &&
-	git clean -dxf &&
-	git checkout 10-fundamentals
-autostart: true
-hidden: true
-----
-
 [source, terminal:execute-all]
 ----
-command: cd ~/exercises/10-fundamentals/initial && clear
+command: cd ~/exercises && clear
 autostart: true
 hidden: true
 ----
 
-[source, dashboard:open-dashboard]
+[source, dashboard:reload-dashboard]
 ----
 name: Editor
 autostart: true
 hidden: true
 ----
 endif::[]
-
