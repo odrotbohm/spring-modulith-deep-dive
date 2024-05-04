@@ -81,6 +81,7 @@ It consists of individual folders per lab, each of them containing an `initial` 
 The lab descriptions in the document here help you understand the goal and walk you through a set of steps to explore a certain piece of functionality of Spring Modulith in the context of the domain.
 If you get stuck or need some inspiration, you can check the content of the `complete` folder as it contains the project in the shape the individual steps should have guided you to.
 
+ifndef::educates[]
 [[introduction.sample-code.prerequisites]]
 === 💼 Prerequisites
 * Git

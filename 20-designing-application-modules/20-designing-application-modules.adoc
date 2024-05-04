@@ -4,6 +4,12 @@
 :source: complete/src/main/java/com/example/app
 :test-source: complete/src/test/java/com/example/app
 
+ifndef::educates[]
+include::201-article-fundamentals-of-application-module-design.adoc[leveloffset=+1]
+include::202-lab-application-module-visibility.adoc[leveloffset=+1]
+include::203-lab-application-module-relationships.adoc[leveloffset=+1]
+endif::[]
+
 ifdef::educates[]
 [source, terminal:execute-all]
 ----
@@ -11,9 +17,7 @@ command: cd ~/exercises && clear
 autostart: true
 hidden: true
 ----
-endif::[]
 
-ifdef::educates[]
 [source, dashboard:reload-dashboard]
 ----
 name: Editor

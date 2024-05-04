@@ -9,7 +9,6 @@ hidden: true
 ----
 endif::[]
 
-ifdef::educates[]
 [source, dashboard:reload-dashboard]
 ----
 name: Editor

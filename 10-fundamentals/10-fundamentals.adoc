@@ -16,9 +16,7 @@ command: cd ~/exercises && clear
 autostart: true
 hidden: true
 ----
-endif::[]
 
-ifdef::educates[]
 [source, dashboard:reload-dashboard]
 ----
 name: Editor
