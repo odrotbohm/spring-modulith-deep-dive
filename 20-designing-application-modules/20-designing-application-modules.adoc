@@ -68,7 +68,7 @@ text: |
 ----
 endif::[]
 
-Create a Spring bean reference to the `OrderRepository` in `OrderManagement`.
+In `OrderManagement`, create a Spring bean reference to the new `OrderRepository` class you just created.
 
 ifndef::educates[]
 [source, java]
@@ -103,16 +103,21 @@ text: |
 ----
 endif::[]
 
-Re-run `ApplicationModularityTests` and see how the output shows that `OrderRepository` is detected as internal module component (the `o` in front of the type name).
-
+ifndef::educates[]
+Re-run `ApplicationModularityTests`.
+endif::[]
 ifdef::educates[]
+Run the `ApplicationModularityTests` you learned about in the previous lab.
+
 [source, terminal:execute]
 ----
 command: mvnw test
 ----
 endif::[]
+Recall that `OrderManagement` is public and is labeled with `+`.
+In contrast, `OrderRepository` is detected as an *internal* module component and labeled accordingly with `o`).
 
-[source]
+[source, bash]
 ----
 …
 # Order
@@ -123,7 +128,8 @@ endif::[]
   + ….OrderManagement
   o ….OrderRepository
 ----
-Try to add a reference to `OrderRepository` from `ApplicationModularityTests` and see how the compiler prevents that.
+
+To highlight the impact of Java visibility modifiers—`public`, `default/package-private`, etc—on the accessibility of classes from different packages, try adding a reference to `OrderRepository` from `ApplicationModularityTests` and see how the compiler prevents that.
 
 ifdef::educates[]
 [source, editor:select-matching-text]
@@ -152,6 +158,8 @@ command: mvnw test
 ----
 endif::[]
 
+You should see a compilation error since `OrderRepository` can only be accessed from within the same package.
+
 [source, bash]
 ----
 [INFO] -------------------------------------------------------------
@@ -159,6 +167,48 @@ endif::[]
 [INFO] -------------------------------------------------------------
 [ERROR] /home/eduk8s/exercises/20-designing-application-modules/initial/src/test/java/com/example/app/ApplicationModularityTests.java:[24,29] com.example.app.order.OrderRepository is not public in com.example.app.order; cannot be accessed from outside package
 ----
+
+The solution is to make `OrderRepository` public.
+
+ifdef::educates[]
+[source, editor:select-matching-text]
+----
+file: ~/exercises/src/main/java/com/example/app/order/OrderRepository.java
+text: class OrderRepository
+----
+
+[source, editor:replace-text-selection]
+----
+file: ~/exercises/src/main/java/com/example/app/order/OrderRepository.java
+text: public class OrderRepository
+----
+endif::[]
+
+Re-run `ApplicationModularityTests` to validate that the compilation now succeeds.
+
+ifdef::educates[]
+[source, terminal:execute]
+----
+command: mvnw test
+----
+endif::[]
+
+Both components are marked as public.
+[source, bash]
+----
+# Order
+> Logical name: order
+> Base package: com.example.app.order
+> Direct module dependencies: none
+> Spring beans:
+  + ….OrderManagement
+  + ….OrderRepository
+----
+
+While this solution works, it exposes `OrderRepository` to access from anywhere in the  application.
+This is a clear indication that Java visibility modifiers are insufficient to protect bounded contexts within a monolithic code base.
+
+Let's explore how Spring Modulith can help us exert finer-grain control over the visibility of this class.
 
 [[module-design.control-visibility.nested-packages]]
 === 👣 Hiding components in nested packages
@@ -171,23 +221,13 @@ command: |
 	mkdir -p src/main/java/com/example/app/order/persistence
 	mv src/main/java/com/example/app/order/OrderRepository.java src/main/java/com/example/app/order/persistence/
 	sed -i "s/package com\.example\.app\.order;/package com\.example\.app\.order\.persistence;/" src/main/java/com/example/app/order/persistence/OrderRepository.java
+---
+
+You also need to update the import statement in each of the classes that reference `OrderRepository`.
+[source, terminal:execute]
+----
 	sed -i "s/import com\.example\.app\.order.\OrderRepository;/import com\.example\.app\.order\.persistence.\OrderRepository;/" src/test/java/com/example/app/ApplicationModularityTests.java
-----
-endif::[]
-
-To resolve the compiler error this creates in `OrderManagement`, change the visibility of the repository type to `public`.
-
-ifdef::educates[]
-[source, editor:select-matching-text]
-----
-file: ~/exercises/src/main/java/com/example/app/order/persistence/OrderRepository.java
-text: class OrderRepository
-----
-
-[source, editor:replace-text-selection]
-----
-file: ~/exercises/src/main/java/com/example/app/order/persistence/OrderRepository.java
-text: public class OrderRepository
+	sed -i "s/@Component/import com\.example\.app\.order\.persistence.\OrderRepository;\n\n@Component/" src/main/java/com/example/app/order/OrderManagement.java
 ----
 endif::[]
 
@@ -200,11 +240,10 @@ command: mvnw test
 ----
 endif::[]
 
-See how the output shows that `OrderRepository` is still considered an internal component (the leading `o` in front of it) as it does not reside in the API package.
+Removing `OrderRepository` from the API package of the `order` module by simply relocating the class to a subpackage is sufficient for Spring Modulith to recognize it as an internal component.
 
-[source]
+[source, bash]
 ----
-…
 # Order
 > Logical name: order
 > Base package: com.example.app.order
