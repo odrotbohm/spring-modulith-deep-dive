@@ -1,7 +1,12 @@
 [preface]
 [[introduction]]
 = Introduction
+ifndef::educates[]
 :imagesdir: ../src/docs/asciidoc/images
+endif::[]
+ifdef::educates[]
+:imagesdir: images
+endif::[]
 
 [[introduction.logistics]]
 == 📋 Logistics
@@ -10,11 +15,11 @@
 
 We use the following icons to represent different parts of the document
 
-* 🧑‍💻 -- A lab.
-* 🎯 -- Describes the learning goals of the lab.
-* 👣 -- Describes a set of steps to complete a topical lab.
-* 📖 -- Describes a section of contextual content, often referring to sections of the slide deck.
-* 💡 -- Summarizes the lab and often include ideas of how to take the code of the lab further.
+* 🧑‍💻 -- A lab
+* 🎯 -- Learning goals of the lab
+* 👣 -- Steps to complete the lab
+* 📖 -- Contextual information, sometimes referencing the slide deck
+* 💡 -- Summary and ideas on taking the lab code further
 
 ifndef::educates[]
 [WARNING]
@@ -35,15 +40,18 @@ endif::[]
 == The domain
 
 The example we are going to use is rooted in the e-commerce domain.
+
+ifndef::educates[]
 As the focus of Spring Modulith is creating a high-level functional structure and implementing and testing the interaction between the individual parts, we don't need to exhaustively cover the entire domain but will rather focus on the following arrangement:
 
 * A catalog that contains products, primarily consisting of a description and a price.
 * An order management module that contains orders consisting of line items referring to the products contained in the catalog.
 * An inventory management that keeps track of the stock for each product.
 
-.Our E-Commerce Domain
+.Our E-Commerce Domain and Use Case
 
 image::domain.png[width=500, align="center"]
+
 
 The primary use case we will investigate in its implications on both the structural, consistency and interaction arrangement is the following: when an order is completed (i.e., flips a certain state), a variety of functionality will have to be triggered:
 
@@ -51,6 +59,20 @@ The primary use case we will investigate in its implications on both the structu
 * An email notification needs to be sent out to the customer.
 * A customer loyalty program needs to record bonus points reflecting the total value of the order.
 
+endif::[]
+
+ifdef::educates[]
+As illustrated below, we will be working with three primary domain objects: a Catalog of products, as well as Order Management and Inventory Management components.
+
+The image also captures the use case, indicating the actions that must occur when an order reaches a completed state.
+
+.Our E-Commerce Domain and Use Case
+
+image::domain-and-use-case.png[width=500, align="center"]
+
+endif::[]
+
+ifndef::educates[]
 [[introduction.sample-code]]
 == 🧑‍💻 Sample Code
 
@@ -59,7 +81,6 @@ It consists of individual folders per lab, each of them containing an `initial` 
 The lab descriptions in the document here help you understand the goal and walk you through a set of steps to explore a certain piece of functionality of Spring Modulith in the context of the domain.
 If you get stuck or need some inspiration, you can check the content of the `complete` folder as it contains the project in the shape the individual steps should have guided you to.
 
-ifndef::educates[]
 [[introduction.sample-code.prerequisites]]
 === 💼 Prerequisites
 * Git
