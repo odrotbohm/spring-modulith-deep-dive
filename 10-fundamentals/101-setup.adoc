@@ -89,16 +89,20 @@ text: |
 ----
 endif::[]
 
+ifndef::educates[]
 Run `./mvnw dependency:list -Dsort`.
+endif::[]
 
 ifdef::educates[]
+Use Maven's `dependency:list` goal to list the dependencies Spring Modulith added to current project.
+
 [source, terminal:execute]
 ----
-command: mvnw dependency:list -Dsort | grep -v Download | grep modulith
+command: mvnw dependency:list -Dsort | grep -v Download | grep spring-modulith
 ----
 endif::[]
 
-See how the output lists the Spring Modulith dependencies in test scope.
+You should see that the output lists the Spring Modulith dependencies in *test scope* only.
 
 [source, bash, subs="attributes+"]
 ----
@@ -108,3 +112,7 @@ See how the output lists the Spring Modulith dependencies in test scope.
 [INFO] org.springframework.modulith:spring-modulith-starter-test:jar:{spring-modulith-version}:test -- module org.springframework.modulith.starter.test [auto]
 [INFO] org.springframework.modulith:spring-modulith-test:jar:{spring-modulith-version}:test -- module org.springframework.modulith.test [auto]
 ----
+
+[[fundamentals.creating-modules.further-ideas]]
+== 💡 Further ideas
+* Why are all Spring Modulith libraries scoped as test only?

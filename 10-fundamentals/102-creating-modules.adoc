@@ -16,7 +16,7 @@ You'll learn how to…
 [[fundamentals.creating-modules.preparations]]
 == 👣 Preparations
 
-Create a test class in the application's root package in `src/test/java` named `ApplicationModularityTests`.
+Now that you know that Spring Modulith specifically adds libraries in the test scope, create a test class in the application's root package in `src/test/java` named `ApplicationModularityTests`.
 
 ifndef::educates[]
 [source, java]
@@ -45,8 +45,9 @@ text: |
 ----
 endif::[]
 
-Within that class, create a test case to create a new instance of `ApplicationModules` pointing to the root Spring Boot application class.
-Print the result of `ApplicationModularityTests.toString()` to the console.
+Within that class, create a test case to derive the application's module model.
+Create a new instance of `ApplicationModules` pointing to the root Spring Boot application class.
+Print the result to the console.
 
 ifndef::educates[]
 [source, java]
@@ -91,7 +92,7 @@ text: |
 ----
 endif::[]
 
-Execute the test and note, how the output stays empty at first.
+Execute the test.
 
 ifdef::educates[]
 [source, terminal:execute]
@@ -99,6 +100,8 @@ ifdef::educates[]
 command: mvnw test
 ----
 endif::[]
+
+Notice that the output is currently empty.
 
 [source, bash]
 ----
@@ -137,7 +140,7 @@ text: |
 ----
 endif::[]
 
-Re-run the test case to see an application module named `Order` is listed, as well as `OrderManagement` as public component.
+Re-run the test.
 
 ifdef::educates[]
 [source, terminal:execute]
@@ -146,7 +149,7 @@ command: mvnw test
 ----
 endif::[]
 
-Note that an application module named `Order` is listed, as well as `OrderManagement` as public component.
+This time, an application module named `Order` is listed, and `OrderManagement`  is labeled as a public component (+).
 
 [source, bash]
 ----
