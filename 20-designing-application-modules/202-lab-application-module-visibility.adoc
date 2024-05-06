@@ -176,7 +176,7 @@ You should see a compilation error since `OrderRepository` can only be accessed 
 [INFO] -------------------------------------------------------------
 [ERROR] COMPILATION ERROR :
 [INFO] -------------------------------------------------------------
-[ERROR] /home/eduk8s/exercises/20-designing-application-modules/initial/src/test/java/com/example/app/ApplicationModularityTests.java:[24,29] com.example.app.order.OrderRepository is not public in com.example.app.order; cannot be accessed from outside package
+[ERROR] …/src/test/java/com/example/app/ApplicationModularityTests.java:[24,29] com.example.app.order.OrderRepository is not public in com.example.app.order; cannot be accessed from outside package
 ----
 
 The solution is to make `OrderRepository` public.
