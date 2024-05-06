@@ -16,8 +16,8 @@ You'll learn how to…
 [[fundamentals.creating-modules.preparations]]
 == 👣 Preparations
 
-Create a test class in the application's root package in `src/test/java` named `ApplicationModularityTests`.
-
+. Create a test class in the application's root package in `src/test/java` named `ApplicationModularityTests`.
++
 ifndef::educates[]
 [source, java]
 ----
@@ -28,10 +28,11 @@ class ApplicationModularityTests {
 ----
 endif::[]
 
-Within that class, create a test case to derive the application's module model.
+. Within that class, create a test case to derive the application's module model.
 Create a new instance of `ApplicationModules` pointing to the root Spring Boot application class.
-Print the result to the console.
 
+. Print the result to the console.
++
 ifndef::educates[]
 [source, java]
 ----
@@ -44,30 +45,29 @@ void bootstrapsApplicationModules() {
 }
 ----
 endif::[]
-
++
 ifdef::educates[]
-
 Expand the section below for clickable instructions.
-
++
 [source, section:begin]
 ----
 title: "Clickable instructions"
 ----
-
++
 [source, terminal:execute-all]
 ----
 command: mkdir -p src/test/java/com/example/app
 autostart: true
 hidden: true
 ----
-
++
 [source, dashboard:reload-dashboard]
 ----
 name: Editor
 autostart: true
 hidden: true
 ----
-
++
 [source, editor:append-lines-to-file]
 ----
 file: ~/exercises/src/test/java/com/example/app/ApplicationModularityTests.java
@@ -76,7 +76,7 @@ text: |
 
 	class ApplicationModularityTests {}
 ----
-
++
 [source, editor:select-matching-text]
 ----
 file: ~/exercises/src/test/java/com/example/app/ApplicationModularityTests.java
@@ -84,7 +84,7 @@ text: "class ApplicationModularityTests {"
 before: 0
 after: 1
 ----
-
++
 [source, editor:replace-text-selection]
 ----
 file: ~/exercises/src/test/java/com/example/app/ApplicationModularityTests.java
@@ -103,21 +103,21 @@ text: |
 		}
 	}
 ----
-
++
 [source, section:end]
 ----
 ----
 endif::[]
-
++
 Execute the test and note, how the output does not list any Spring Modulith specific information.
-
++
 ifdef::educates[]
 [source, terminal:execute]
 ----
 command: mvnw test
 ----
 endif::[]
-
++
 [source, bash]
 ----
 [INFO] -------------------------------------------------------
@@ -130,31 +130,31 @@ endif::[]
 [[fundamentals.creating-modules.adding-a-module]]
 == 👣 Adding a Module
 
-Create a package `order` and add a public type `OrderManagement` in that package.
-Annotate the type with Spring's `@Component` annotation.
-
+. Create a package `order`
+. Add a public type `OrderManagement` in that package and annotate the type with Spring's `@Component` annotation.
++
 ifdef::educates[]
 Expand the section below for clickable instructions.
-
++
 [source, section:begin]
 ----
 title: "Clickable instructions"
 ----
-
++
 [source, terminal:execute-all]
 ----
 command: mkdir -p src/main/java/com/example/app/order
 autostart: true
 hidden: true
 ----
-
++
 [source, dashboard:reload-dashboard]
 ----
 name: Editor
 autostart: true
 hidden: true
 ----
-
++
 [source, editor:append-lines-to-file]
 ----
 file: ~/exercises/src/main/java/com/example/app/order/OrderManagement.java
@@ -166,21 +166,21 @@ text: |
 	@Component
 	public class OrderManagement {}
 ----
-
++
 [source, section:end]
 ----
 ----
 endif::[]
 
-Re-run the test case to see an application module named `Order` is listed, as well as `OrderManagement` as public component.
-
+. Re-run the test case to see an application module named `Order` is listed, as well as `OrderManagement` as public component.
++
 ifdef::educates[]
 [source, terminal:execute]
 ----
 command: mvnw test
 ----
 endif::[]
-
++
 [source, bash]
 ----
 [INFO] -------------------------------------------------------

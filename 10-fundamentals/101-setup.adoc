@@ -13,8 +13,8 @@ You'll learn how to…
 [[fundamentals.setup.steps]]
 == 👣 Build setup
 
-Open `pom.xml` and add the Spring Modulith BOM in the `<dependencyManagement />` section.
-
+. Open `pom.xml` and add the Spring Modulith BOM in the `<dependencyManagement />` section.
++
 ifndef::educates[]
 [source, xml, subs="attributes+"]
 ----
@@ -36,7 +36,7 @@ text: "<dependencyManagement>"
 before: 0
 after: 4
 ----
-
++
 [source, editor:replace-text-selection]
 ----
 file: ~/exercises/pom.xml
@@ -55,8 +55,8 @@ text: |
 ----
 endif::[]
 
-Add the `org.springframework:spring-modulith-starter-test` dependency in test scope to your `pom.xml`.
-
+. Add the `org.springframework:spring-modulith-starter-test` dependency in test scope to your `pom.xml`.
++
 ifndef::educates[]
 [source, xml]
 ----
@@ -76,7 +76,7 @@ text: "<!-- Spring Modulith -->"
 before: 0
 after: 0
 ----
-
++
 [source, editor:replace-text-selection]
 ----
 file: ~/exercises/pom.xml
@@ -89,8 +89,8 @@ text: |
 ----
 endif::[]
 
-Run `./mvnw dependency:list -Dsort`.
-
+. Run `./mvnw dependency:list -Dsort`.
++
 ifdef::educates[]
 [source, terminal:execute]
 ----
@@ -98,8 +98,8 @@ command: mvnw dependency:list -Dsort | grep -v Download | grep modulith
 ----
 endif::[]
 
-See how the output lists the Spring Modulith dependencies in test scope.
-
+. See how the output lists the Spring Modulith dependencies in test scope.
++
 [source, bash, subs="attributes+"]
 ----
 [INFO] org.springframework.modulith:spring-modulith-api:jar:{spring-modulith-version}:test -- module org.springframework.modulith.api [auto]
