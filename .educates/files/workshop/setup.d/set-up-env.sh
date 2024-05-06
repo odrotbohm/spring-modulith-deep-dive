@@ -12,7 +12,9 @@ if [ -n "$exercisesDir" ] && eval [ -d $exercisesDir ]; then
 
     # Create a symbolic link from ~exercises to the current lab code
     echo "Linking ~/exercises to $exercisesDir"
-    eval ln -s $exercisesDir ~/exercises
+    if [ ! -L ~/exercises ]; then
+        eval ln -s $exercisesDir ~/exercises
+    fi
 
     # Configure VSCode
     echo "Creating '$vscodeFile' to control visible files in VSCode (show only ~/exercises/*)"
