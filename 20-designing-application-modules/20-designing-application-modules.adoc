@@ -25,4 +25,3 @@ autostart: true
 hidden: true
 ----
 endif::[]
-
