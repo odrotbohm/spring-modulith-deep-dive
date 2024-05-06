@@ -28,23 +28,6 @@ class ApplicationModularityTests {
 ----
 endif::[]
 
-ifdef::educates[]
-[source, terminal:execute]
-----
-command: mkdir -p src/test/java/com/example/app
-----
-
-[source, editor:append-lines-to-file]
-----
-file: ~/exercises/src/test/java/com/example/app/ApplicationModularityTests.java
-text: |
-	package com.example.app;
-
-	class ApplicationModularityTests {
-	}
-----
-endif::[]
-
 Within that class, create a test case to derive the application's module model.
 Create a new instance of `ApplicationModules` pointing to the root Spring Boot application class.
 Print the result to the console.
@@ -63,6 +46,38 @@ void bootstrapsApplicationModules() {
 endif::[]
 
 ifdef::educates[]
+
+Expand the section below for clickable instructions.
+
+[source, section:begin]
+----
+title: "Clickable instructions"
+----
+
+[source, terminal:execute-all]
+----
+command: mkdir -p src/test/java/com/example/app
+autostart: true
+hidden: true
+----
+
+[source, dashboard:reload-dashboard]
+----
+name: Editor
+autostart: true
+hidden: true
+----
+
+[source, editor:append-lines-to-file]
+----
+file: ~/exercises/src/test/java/com/example/app/ApplicationModularityTests.java
+text: |
+	package com.example.app;
+
+	class ApplicationModularityTests {
+	}
+----
+
 [source, editor:select-matching-text]
 ----
 file: ~/exercises/src/test/java/com/example/app/ApplicationModularityTests.java
@@ -90,6 +105,11 @@ text: |
 		}
 	}
 ----
+
+[source, section:end]
+----
+----
+
 endif::[]
 
 Execute the test.
@@ -101,7 +121,7 @@ command: mvnw test
 ----
 endif::[]
 
-Notice that the output is currently empty.
+You should see empty test output.
 
 [source, bash]
 ----
@@ -109,24 +129,37 @@ Notice that the output is currently empty.
 [INFO]  T E S T S
 [INFO] -------------------------------------------------------
 [INFO] Running com.example.app.ApplicationModularityTests
-… [main] INFO com.tngtech.archunit.core.PluginLoader -- Detected Java version 17.0.7
+01:37:10.717 [main] INFO com.tngtech.archunit.core.PluginLoader -- Detected Java version 21.0.1
 ----
 
 [[fundamentals.creating-modules.adding-a-module]]
 == 👣 Adding a Module
 
-Create a package `order`.
+Create a package `order` and add a public type `OrderManagement` in that package.
 
 ifdef::educates[]
-[source, terminal:execute]
+
+Expand the section below for clickable instructions.
+
+[source, section:begin]
+----
+title: "Clickable instructions"
+----
+
+[source, terminal:execute-all]
 ----
 command: mkdir -p src/main/java/com/example/app/order
+autostart: true
+hidden: true
 ----
-endif::[]
 
-Add a public type `OrderManagement` in that package.
+[source, dashboard:reload-dashboard]
+----
+name: Editor
+autostart: true
+hidden: true
+----
 
-ifdef::educates[]
 [source, editor:append-lines-to-file]
 ----
 file: ~/exercises/src/main/java/com/example/app/order/OrderManagement.java
@@ -138,6 +171,11 @@ text: |
 	@Component
 	public class OrderManagement {}
 ----
+
+[source, section:end]
+----
+----
+
 endif::[]
 
 Re-run the test.
@@ -157,7 +195,7 @@ This time, an application module named `Order` is listed, and `OrderManagement` 
 [INFO]  T E S T S
 [INFO] -------------------------------------------------------
 [INFO] Running com.example.app.ApplicationModularityTests
-… [main] INFO com.tngtech.archunit.core.PluginLoader -- Detected Java version 17.0.7
+01:38:35.446 [main] INFO com.tngtech.archunit.core.PluginLoader -- Detected Java version 21.0.1
 # Order
 > Logical name: order
 > Base package: com.example.app.order
@@ -171,4 +209,3 @@ This time, an application module named `Order` is listed, and `OrderManagement` 
 * What happens if you add sibling packages to `order` containing Spring bean classes in them?
 * How does changing the visibility modifier of the types in the packages change the test output?
 * How does the test output change if you introduce a dependency between components in different modules?
-
