@@ -1,3 +1,4 @@
+[[arch-evident-code]]
 = Architecturally-Evident Code Using jMolecules
 
 ifdef::educates[]
@@ -16,12 +17,16 @@ hidden: true
 ----
 endif::[]
 
+[[arch-evident-code.fundamentals]]
 == 📖 -- jMolecules Fundamentals
+
+[[arch-evident-code.project-setup]]
 == 🧑‍💻 -- Add jMolecules to the project
 
 ifndef::educates[]
 [TIP]
 endif::[]
+
 ifdef::educates[]
 [quote]
 ____
@@ -32,7 +37,10 @@ ifdef::educates[]
 ____
 endif::[]
 
+[[arch-evident-code.boilerplate]]
 == 📖 -- Avoiding Boilerplate Code with jMolecules Integrations
+
+[[arch-evident-code.jpa-aggregates]]
 == 🧑‍💻 -- Persisting Aggregates with JPA
 
 ifndef::educates[]
@@ -47,3 +55,4 @@ Use the Spring CLI's `jmolecules add-aggregate` command to add an aggregate and 
 ifdef::educates[]
 ____
 endif::[]
+
