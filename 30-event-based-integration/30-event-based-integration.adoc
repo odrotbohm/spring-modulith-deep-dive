@@ -460,5 +460,21 @@ java.lang.RuntimeException: null
 The publications get registered as before, the `Inventory` listener fails as can be seen by the reported exception stack trace leaving the publication uncompleted.
 This is also reported in the eventual shutdown of the application context.
 
+[[events.event-publication-registry.remove-at-enable-async]]
+=== 👣 Remove obsolete `@EnableAsync` annotation
+
+Declaring the Spring Modulith JPA starter brought in the `spring-modulith-events-core` artifact.
+This not only contains the Spring Boot configuration to enable the Event Publication Registry, it also makes sure that the support for asynchronous method invocations is enabled automatically.
+Thus, we can remove the `@EnableAsync` annotation we had explicitly declared on our application class in <<events.application-module-listener.steps>>.
+
+1. Open up `Application.java` and remove the `@EnableAsync` annotation from the class declaration.
++
+[source, java]
+----
+@EnableAsync // <- remove this
+@SpringBootApplication
+public class Application { /* … */ }
+----
+
 [[events.event-publication-registry.summary]]
 === 💡 Summary
