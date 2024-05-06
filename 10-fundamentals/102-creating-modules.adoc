@@ -116,8 +116,9 @@ ifdef::educates[]
 ----
 command: mvnw test
 ----
-endif::[]
 +
+endif::[]
+
 [source, bash]
 ----
 [INFO] -------------------------------------------------------
@@ -179,8 +180,9 @@ ifdef::educates[]
 ----
 command: mvnw test
 ----
-endif::[]
 +
+endif::[]
+
 [source, bash]
 ----
 [INFO] -------------------------------------------------------
