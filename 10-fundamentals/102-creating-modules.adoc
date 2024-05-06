@@ -90,7 +90,6 @@ after: 1
 ----
 file: ~/exercises/src/test/java/com/example/app/ApplicationModularityTests.java
 text: |
-
 	import org.junit.jupiter.api.Test;
 	import org.springframework.modulith.core.ApplicationModules;
 
@@ -209,3 +208,50 @@ This time, an application module named `Order` is listed, and `OrderManagement` 
 * What happens if you add sibling packages to `order` containing Spring bean classes in them?
 * How does changing the visibility modifier of the types in the packages change the test output?
 * How does the test output change if you introduce a dependency between components in different modules?
+
+ifdef::educates[]
+
+[[fundamentals.creating-modules.help]]
+== 💡 Help!
+
+If you're having trouble with the code, expand this section for help.
+
+[source, section:begin]
+----
+title: "Solution"
+----
+
+[source, java]
+----
+package com.example.app;
+
+import org.junit.jupiter.api.Test;
+import org.springframework.modulith.core.ApplicationModules;
+
+class ApplicationModularityTests {
+
+    @Test
+    void bootstrapsApplicationModules() {
+
+        var modules = ApplicationModules.of(Application.class);
+
+        System.out.println(modules);
+    }
+}
+----
+
+[source, java]
+----
+package com.example.app.order;
+
+import org.springframework.stereotype.Component;
+
+@Component
+public class OrderManagement {}
+----
+
+[source, section:end]
+----
+----
+
+endif::[]
