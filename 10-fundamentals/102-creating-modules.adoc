@@ -222,13 +222,13 @@ import org.springframework.modulith.core.ApplicationModules;
 
 class ApplicationModularityTests {
 
-    @Test
-    void bootstrapsApplicationModules() {
+	@Test
+	void bootstrapsApplicationModules() {
 
-        var modules = ApplicationModules.of(Application.class);
+		var modules = ApplicationModules.of(Application.class);
 
-        System.out.println(modules);
-    }
+		System.out.println(modules);
+	}
 }
 ----
 
