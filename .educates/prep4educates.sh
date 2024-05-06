@@ -57,7 +57,7 @@ for file in $files; do
 
     # Search for image tags and extract src attribute value
     while IFS= read -r line; do
-        if [[ $line =~ \<img.*src=\"([^\"]+)\" ]]; then
+        if [[ $line =~ !\[img\]\((.*)\) ]]; then
             mkdir $target/$imagesdir
             cp "${asciidoctorbase}/${BASH_REMATCH[1]}" "${target}/${BASH_REMATCH[1]}"
         fi

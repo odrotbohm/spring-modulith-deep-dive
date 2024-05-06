@@ -43,7 +43,15 @@ As the focus of Spring Modulith is creating a high-level functional structure an
 
 .Our E-Commerce Domain
 
+ifndef::educates[]
 image::domain.png[width=500, align="center"]
+endif::[]
+ifdef::educates[]
+[source, subs="attributes+"]
+----
+![img]({imagesdir}/domain.png)
+----
+endif::[]
 
 The primary use case we will investigate in its implications on both the structural, consistency and interaction arrangement is the following: when an order is completed (i.e., flips a certain state), a variety of functionality will have to be triggered:
 
