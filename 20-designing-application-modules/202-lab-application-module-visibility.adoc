@@ -233,7 +233,7 @@ This is a clear indication that Java visibility modifiers are insufficient to pr
 Let's explore how Spring Modulith offers finer-grain control over the visibility of this class.
 
 [[module-design.control-visibility.nested-packages]]
-=== 👣 Hiding components in nested packages
+== 👣 Hiding components in nested packages
 Introduce a package named `order.persistence` and move `OrderRepository` to that package.
 
 ifdef::educates[]
