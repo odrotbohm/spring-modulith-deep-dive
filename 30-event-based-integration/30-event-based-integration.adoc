@@ -192,6 +192,12 @@ This allows us to avoid the dependencies from the order module to break the cycl
 [[events.application-module-listener.objectives]]
 === 🎯 Objectives
 
+In this section you will learn how…
+
+- … to switch the module interaction to an asynchronous model by using the `@ApplicationEventListener` annotation
+- … that switch changes the consistency model of the interaction
+- … to guard the asynchronous interaction against listener failures using the Event Publication Registry
+
 [[events.application-module-listener.steps]]
 === 👣 Changing the listener execution model
 
