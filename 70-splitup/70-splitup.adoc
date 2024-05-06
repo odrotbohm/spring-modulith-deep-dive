@@ -1,5 +1,6 @@
 [[splitup]]
 = Splitting the Modulith
+:imagesdir: ../src/docs/asciidoc/images
 
 ifdef::educates[]
 [source, terminal:execute-all]
@@ -19,5 +20,5 @@ endif::[]
 
 == Introduction
 
-image::images/splitup.jpeg[]
+image::splitup.jpeg[]
 
