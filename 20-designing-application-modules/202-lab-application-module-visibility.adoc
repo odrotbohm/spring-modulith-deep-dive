@@ -1,8 +1,8 @@
 [[module-design.control-visibility]]
-= 🧑‍💻 Using Application Modules to control visibility
+== 🧑‍💻 Using Application Modules to control visibility
 
 [[module-design.control-visibility.objectives]]
-== 🎯 Objectives
+=== 🎯 Objectives
 
 You'll learn how to…
 
@@ -10,7 +10,7 @@ You'll learn how to…
 * … verify foreign application modules cannot access internal components
 
 [[module-design.control-visibility.package-protected-types]]
-== 👣 Hiding application module internals by using the package scope
+=== 👣 Hiding application module internals by using the package scope
 
 Add an `OrderRepository` class in default scope to the `order` package
 
@@ -24,7 +24,16 @@ class OrderRepository {}
 ----
 endif::[]
 
+
 ifdef::educates[]
+
+Expand the section below for clickable instructions.
+
+[source, section:begin]
+----
+title: "Clickable instructions"
+----
+
 [source, editor:append-lines-to-file]
 ----
 file: ~/exercises/src/main/java/com/example/app/order/OrderRepository.java
@@ -36,9 +45,15 @@ text: |
 	@Repository
 	class OrderRepository {}
 ----
+
+[source, section:end]
+----
+----
+
 endif::[]
 
-Create a Spring bean reference to the `OrderRepository` in `OrderManagement`.
+
+In `OrderManagement`, create a Spring bean reference to the new `OrderRepository` class you just created.
 
 ifndef::educates[]
 [source, java]
@@ -47,7 +62,16 @@ include::{source}/order/OrderManagement.java[tags=class]
 ----
 endif::[]
 
+
 ifdef::educates[]
+
+Expand the section below for clickable instructions.
+
+[source, section:begin]
+----
+title: "Clickable instructions"
+----
+
 [source, editor:select-matching-text]
 ----
 file: ~/exercises/src/main/java/com/example/app/order/OrderManagement.java
@@ -55,9 +79,7 @@ text: "public class OrderManagement {}"
 before: 2
 after: 0
 ----
-endif::[]
 
-ifdef::educates[]
 [source, editor:replace-text-selection]
 ----
 file: ~/exercises/src/main/java/com/example/app/order/OrderManagement.java
@@ -71,18 +93,30 @@ text: |
 		private final OrderRepository repository;
 	}
 ----
+
+[source, section:end]
+----
+----
+
 endif::[]
 
-Re-run `ApplicationModularityTests` and see how the output shows that `OrderRepository` is detected as internal module component (the `o` in front of the type name).
+ifndef::educates[]
+Re-run `ApplicationModularityTests`.
+endif::[]
 
 ifdef::educates[]
+Run the `ApplicationModularityTests` you learned about in the previous lab.
+
 [source, terminal:execute]
 ----
 command: mvnw test
 ----
 endif::[]
 
-[source]
+Recall that `OrderManagement` is public and is labeled with `+`.
+In contrast, `OrderRepository` is detected as an *internal* module component and labeled accordingly with `o`).
+
+[source, bash]
 ----
 …
 # Order
@@ -93,9 +127,19 @@ endif::[]
   + ….OrderManagement
   o ….OrderRepository
 ----
-Try to add a reference to `OrderRepository` from `ApplicationModularityTests` and see how the compiler prevents that.
+
+To highlight the impact of Java visibility modifiers—`public`, `default/package-private`, etc—on the accessibility of classes from different packages, try adding a reference to `OrderRepository` in `ApplicationModularityTests` and see how the compiler prevents that.
+
 
 ifdef::educates[]
+
+Expand the section below for clickable instructions.
+
+[source, section:begin]
+----
+title: "Clickable instructions"
+----
+
 [source, editor:select-matching-text]
 ----
 file: ~/exercises/src/test/java/com/example/app/ApplicationModularityTests.java
@@ -120,7 +164,14 @@ text: |
 ----
 command: mvnw test
 ----
+
+[source, section:end]
+----
+----
+
 endif::[]
+
+You should see a compilation error since `OrderRepository` can only be accessed from within the same package.
 
 [source, bash]
 ----
@@ -130,34 +181,78 @@ endif::[]
 [ERROR] /home/eduk8s/exercises/20-designing-application-modules/initial/src/test/java/com/example/app/ApplicationModularityTests.java:[24,29] com.example.app.order.OrderRepository is not public in com.example.app.order; cannot be accessed from outside package
 ----
 
+The solution is to make `OrderRepository` public.
+Then, re-run `ApplicationModularityTests` to validate that the compilation now succeeds.
+
+ifdef::educates[]
+
+Expand the section below for clickable instructions.
+
+[source,section:begin]
+----
+title: "Clickable instructions"
+----
+
+[source, editor:select-matching-text]
+----
+file: ~/exercises/src/main/java/com/example/app/order/OrderRepository.java
+text: class OrderRepository
+----
+
+[source, editor:replace-text-selection]
+----
+file: ~/exercises/src/main/java/com/example/app/order/OrderRepository.java
+text: public class OrderRepository
+----
+
+[source, terminal:execute]
+----
+command: mvnw test
+----
+
+[source,section:end]
+----
+----
+
+endif::[]
+
+Now, both components should be marked as public.
+[source, bash]
+----
+…
+# Order
+> Logical name: order
+> Base package: com.example.app.order
+> Direct module dependencies: none
+> Spring beans:
+  + ….OrderManagement
+  + ….OrderRepository
+----
+
+While this solution works, it exposes `OrderRepository` to access from anywhere in the  application.
+This is a clear indication that Java visibility modifiers are insufficient to protect bounded contexts within a monolithic code base.
+
+Let's explore how Spring Modulith offers finer-grain control over the visibility of this class.
+
 [[module-design.control-visibility.nested-packages]]
-== 👣 Hiding components in nested packages
+=== 👣 Hiding components in nested packages
 Introduce a package named `order.persistence` and move `OrderRepository` to that package.
 
 ifdef::educates[]
 [source, terminal:execute]
 ----
 command: |
-	mkdir -p src/main/java/com/example/app/order/persistence
-	mv src/main/java/com/example/app/order/OrderRepository.java src/main/java/com/example/app/order/persistence/
-	sed -i "s/package com\.example\.app\.order;/package com\.example\.app\.order\.persistence;/" src/main/java/com/example/app/order/persistence/OrderRepository.java
-	sed -i "s/import com\.example\.app\.order.\OrderRepository;/import com\.example\.app\.order\.persistence.\OrderRepository;/" src/test/java/com/example/app/ApplicationModularityTests.java
-----
-endif::[]
-
-To resolve the compiler error this creates in `OrderManagement`, change the visibility of the repository type to `public`.
-
-ifdef::educates[]
-[source, editor:select-matching-text]
-----
-file: ~/exercises/src/main/java/com/example/app/order/persistence/OrderRepository.java
-text: class OrderRepository
-----
-
-[source, editor:replace-text-selection]
-----
-file: ~/exercises/src/main/java/com/example/app/order/persistence/OrderRepository.java
-text: public class OrderRepository
+    # Create directory, move file, update package declaration
+	mkdir -p src/main/java/com/example/app/order/persistence && \
+    mv src/main/java/com/example/app/order/OrderRepository.java \
+        src/main/java/com/example/app/order/persistence/ && \
+	sed -i "s/package com\.example\.app\.order;/package com\.example\.app\.order\.persistence;/" \
+        src/main/java/com/example/app/order/persistence/OrderRepository.java
+    # Update the import statement in classes that reference `OrderRepository`.
+        sed -i "s/import com\.example\.app\.order.\OrderRepository;/import com\.example\.app\.order\.persistence.\OrderRepository;/" \
+            src/test/java/com/example/app/ApplicationModularityTests.java
+        sed -i "s/@Component/import com\.example\.app\.order\.persistence.\OrderRepository;\n\n@Component/" \
+            src/main/java/com/example/app/order/OrderManagement.java
 ----
 endif::[]
 
@@ -170,11 +265,10 @@ command: mvnw test
 ----
 endif::[]
 
-See how the output shows that `OrderRepository` is still considered an internal component (the leading `o` in front of it) as it does not reside in the API package.
+Notice that removing `OrderRepository` from the API package of the `order` module by simply relocating the class to a subpackage is sufficient for Spring Modulith to recognize it as an internal component.
 
-[source]
+[source, bash]
 ----
-…
 # Order
 > Logical name: order
 > Base package: com.example.app.order
@@ -186,10 +280,9 @@ See how the output shows that `OrderRepository` is still considered an internal 
 
 ////
 [[module-design.control-visibility.named-interfaces]]
-== 👣 Steps -- Named interfaces
+=== 👣 Steps -- Named interfaces
 
 - Annotate package with `@NamedInterface`
 - Discuss output
 - Add type in root package, annotated -> also assigned to that NI
 ////
-
