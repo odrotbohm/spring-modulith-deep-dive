@@ -3,6 +3,7 @@
 :index-link:
 :iconfont-fontawesome:
 :sectnums:
+:sectnumlevels: 2
 
 include::../../../00-introduction/00-introduction.adoc[leveloffset=+1]
 include::../../../10-fundamentals/10-fundamentals.adoc[leveloffset=+1]
