@@ -109,7 +109,7 @@ text: |
 ----
 endif::[]
 
-Execute the test and note, how the output stays empty at first.
+Execute the test and note, how the output does not list any Spring Modulith specific information.
 
 ifdef::educates[]
 [source, terminal:execute]
@@ -117,8 +117,6 @@ ifdef::educates[]
 command: mvnw test
 ----
 endif::[]
-
-You should see empty test output.
 
 [source, bash]
 ----
@@ -133,6 +131,7 @@ You should see empty test output.
 == 👣 Adding a Module
 
 Create a package `order` and add a public type `OrderManagement` in that package.
+Annotate the type with Spring's `@Component` annotation.
 
 ifdef::educates[]
 Expand the section below for clickable instructions.
@@ -181,8 +180,6 @@ ifdef::educates[]
 command: mvnw test
 ----
 endif::[]
-
-Note that an application module named `Order` is listed, as well as `OrderManagement` as public component.
 
 [source, bash]
 ----
