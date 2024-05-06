@@ -26,6 +26,7 @@ ifdef::educates[]
 [quote]
 ____
 **Tip** +
+endif::[]
 Use the Spring CLI's `jmolecules init` command to add the basic setup of jMolecules to your project.
 ifdef::educates[]
 ____
