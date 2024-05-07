@@ -12,10 +12,74 @@ You'll learn how to…
 [[module-design.relationships.managing-type-relationships]]
 == 👣 Managing type relationships
 
-- Introduce inventory
-- Create `Inventory`
-- Add constructor argument of type `OrderManagement`
-- add verify()
-- Run test -> green
-- Change constructor argument to `OrderRepository` -> red as it's an internal component
+. Create an application module package `inventory`.
+. Add an application service `Inventory` inside that package.
++
+[source, java]
+----
+package com.example.app.inventory;
 
+import lombok.RequiredArgsConstructor;
+
+import org.springframework.stereotype.Component;
+
+@Component
+@RequiredArgsConstructor
+public class Inventory {
+}
+----
+
+. Run modularity tests and see the module listed including the `Inventory` component.
+. In `OrderManagement` add a dependency to the Inventory.
++
+[source, java]
+----
+package com.example.app.order;
+
+import lombok.RequiredArgsConstructor;
+
+import org.springframework.stereotype.Component;
+
+import com.example.app.inventory.Inventory;
+
+@Component
+@RequiredArgsConstructor
+public class OrderManagement {
+
+	private final Inventory inventory;
+}
+----
+
+. Run the modularity tests and see how the model now reflects the cross-application-module dependency we introduced.
++
+[source, text]
+----
+# Inventory
+> Logical name: inventory
+> Base package: com.example.app.inventory
+> Direct module dependencies: order
+> Spring beans:
+  + ….Inventory
+----
+
+. Introduce a dependency from the `Inventory` to the `OrderManagement`.
++
+[source, java]
+----
+package com.example.app.inventory;
+
+import lombok.RequiredArgsConstructor;
+
+import org.springframework.stereotype.Component;
+
+import com.example.app.order.OrderManagement;
+
+@Component
+@RequiredArgsConstructor
+public class Inventory {
+
+	private final OrderManagement orders;
+}
+----
+
+. Re-run the modularity test and see it fail. -> cyclic dependency.
