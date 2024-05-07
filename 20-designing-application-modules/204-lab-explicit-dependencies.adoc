@@ -1,0 +1,4 @@
+[[module-design.explicit-dependencies]]
+= 👣 Explicit Application Module Dependencies
+
+

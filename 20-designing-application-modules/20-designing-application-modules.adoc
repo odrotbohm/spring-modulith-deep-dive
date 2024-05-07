@@ -8,6 +8,7 @@ ifndef::educates[]
 include::201-article-fundamentals-of-application-module-design.adoc[leveloffset=+1]
 include::202-lab-application-module-visibility.adoc[leveloffset=+1]
 include::203-lab-application-module-relationships.adoc[leveloffset=+1]
+include::204-lab-explicit-dependencies.adoc[leveloffset=+1]
 endif::[]
 
 ifdef::educates[]
