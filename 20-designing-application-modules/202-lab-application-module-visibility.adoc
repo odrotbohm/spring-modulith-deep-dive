@@ -234,7 +234,7 @@ Let's explore how Spring Modulith offers finer-grain control over the visibility
 
 [[module-design.control-visibility.nested-packages]]
 == 👣 Hiding components in nested packages
-Introduce a package named `order.persistence` and move `OrderRepository` to that package.
+. Introduce a package named `order.persistence` and move `OrderRepository` to that package.
 
 ifdef::educates[]
 [source, terminal:execute]
@@ -252,11 +252,9 @@ command: |
         sed -i "s/@Component/import com\.example\.app\.order\.persistence.\OrderRepository;\n\n@Component/" \
             src/main/java/com/example/app/order/OrderManagement.java
 ----
-endif::[]
 
-You also need to update the import statement in each of the classes that reference `OrderRepository`.
+Make sure that you also update the import statement in each of the classes that reference `OrderRepository`.
 
-ifdef::educates[]
 [source, terminal:execute]
 ----
 command: |
@@ -265,18 +263,19 @@ command: |
 ----
 endif::[]
 
-Re-run `ApplicationModularityTests`.
-
+. Re-run `ApplicationModularityTests`.
++
 ifdef::educates[]
 [source, terminal:execute]
 ----
 command: mvnw test
 ----
++
 endif::[]
 
-Notice that removing `OrderRepository` from the API package of the `order` module by simply relocating the class to a subpackage is sufficient for Spring Modulith to recognize it as an internal component.
-
-[source, bash]
+Notice that removing `OrderRepository` from the API package of the `order` module by simply relocating the class to a sub-package is sufficient for Spring Modulith to recognize it as an internal component.
++
+[source, text]
 ----
 # Order
 > Logical name: order
@@ -287,12 +286,62 @@ Notice that removing `OrderRepository` from the API package of the `order` modul
   o ….persistence.OrderRepository
 ----
 
-////
-[[module-design.control-visibility.named-interfaces]]
-== 👣 Steps -- Named interfaces
+. Add a constructor to the `Application` class that refers to the `OrderRepository`.
++
+[source, java]
+----
+@SpringBootApplication
+class Application {
 
-- Annotate package with `@NamedInterface`
-- Discuss output
-- Add type in root package, annotated -> also assigned to that NI
-////
+	Application(OrderRepository repository) {}
+}
+----
+
+. Re-run `ApplicationModularityTests` and see how it fails as the reference to an application module internal type is invalid.
+
+[[module-design.control-visibility.named-interfaces]]
+== 👣 Named interfaces
+
+. Annotate `OrderRepository` with `@NamedInterface`.
+
++
+ifndef::educates[]
+[source, java]
+----
+import org.springframework.stereotype.Repository;
+
+@Repository
+class OrderRepository {}
+----
+endif::[]
+
+. Re-run `ApplicationModularityTests` and inspect the output.
++
+[source, text]
+----
+# Order
+> Logical name: order
+> Base package: com.example.app.order
+> Named interfaces:
+  + NamedInterface: name=<<UNNAMED>>, types=[ c.e.a.o.OrderManagement ]
+  + NamedInterface: name=persistence, types=[ c.e.a.o.p.OrderRepository ]
+> Direct module dependencies: none
+> Spring beans:
+  + ….OrderManagement
+  + ….persistence.OrderRepository
+----
++
+Note the following changes:
++
+* The output lists two named interfaces.
+The _unnamed_ interface contains all types contained in the application module's base API package.
+This particular interface always exists implicitly.
+Furthermore, a second named interface _persistence_ exists.
+It's a result of us annotating `OrderRepository` with `@NamedInterface` and named by the local package name containing the annotated type.
+* `OrderRepository` being assigned to a named interface now makes it a part of the overall application module API (note the `+` sign in front of its Spring bean listing).
+That in turn causes the verification to not fail anymore.
+
+Named interfaces provide a flexible way of selectively exposing additional types in an application modules API.
+We will learn how to use them to explicitly control allowed dependencies between application modules in xref:204-lab-explicit-dependencies.adoc[module-design.explicit-dependencies].
+
 
