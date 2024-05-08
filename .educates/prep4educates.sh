@@ -17,17 +17,25 @@ for dir in [0-9][0-9]*/; do
     mkdir -p $target
     cp -r .educates/files/* $target
 
-    # Move content files
-    # Spring Academy Course expected folder structure
-    target="${basedir}/workshops/${dir}workshop"
-
-    # Create folder
-    mkdir -p $target/content
 
     # Find all AsciiDoc files recursively
-    find $dir -name "*.adoc" -type f | while read -r file; do
+    find $dir -name "[0-9][0-9][0-9]*.adoc" -type f | while read -r file; do
 
         filename=$(basename "$file" .adoc)
+
+        if [[ $filename =~ .*-article-.* ]]; then
+            targetDir="${basedir}/${dir}"
+            targetFile="content.md"
+            isArticle=true
+        else
+            targetDir="${basedir}/workshops/${dir}workshop/content"
+            targetFile="${filename}.md"
+            isArticle=false
+        fi
+
+        # Create folder
+        mkdir -p $targetDir
+
 
         # Convert AsciiDoc to DocBook using Asciidoctor
         asciidoctor -b docbook -d book \
@@ -39,7 +47,7 @@ for dir in [0-9][0-9]*/; do
 
         # Convert DocBook to Markdown using Pandoc
         # -s to keep the primary headline
-        pandoc -s -f docbook -t markdown -o "${target}/content/${filename}.md"
+        pandoc -s -f docbook -t markdown -o "${targetDir}/${targetFile}"
 
     done
 
