@@ -16,7 +16,6 @@ command: cd ~/exercises && clear
 autostart: true
 hidden: true
 ----
-
 [source, dashboard:reload-dashboard]
 ----
 name: Editor
