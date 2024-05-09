@@ -24,7 +24,8 @@ if [ -n "$exercisesDir" ] && eval [ -d $exercisesDir ]; then
         "**/.*": true,
         "**/code": true,
         "**/exercises/**": false,
-    }
+    },
+    "editor.formatOnSave": true
 }
 EOF
 
@@ -37,7 +38,8 @@ else
 {
     "files.exclude": {
         "**/.*": true,
-    }
+    },
+    "editor.formatOnSave": true
 }
 EOF
 
