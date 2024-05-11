@@ -36,7 +36,6 @@ ifndef::educates[]
 	<scope>import</scope>
 </dependency>
 ----
-+
 endif::[]
 
 . Add the `org.springframework:spring-modulith-starter-test` dependency in test scope to your `pom.xml`.
@@ -51,7 +50,6 @@ ifndef::educates[]
 	<scope>test</scope>
 </dependency>
 ----
-+
 endif::[]
 
 . Run `mvn dependency:list -Dsort`. (It may take a few moments for the command to download dependencies in the background).

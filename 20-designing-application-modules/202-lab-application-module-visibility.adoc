@@ -12,9 +12,10 @@ You'll learn how to…
 [[module-design.control-visibility.package-protected-types]]
 == 👣 Hiding application module internals by using the package scope
 
-Add an `OrderRepository` class in default scope to the `order` package
+. Add an `OrderRepository` class in default scope to the `order` package
 
 ifndef::educates[]
++
 [source, java]
 ----
 import org.springframework.stereotype.Repository;
@@ -24,17 +25,26 @@ class OrderRepository {}
 ----
 endif::[]
 
+. In `OrderManagement`, create a Spring bean reference to the new `OrderRepository` class you just created.
+
+ifndef::educates[]
++
+[source, java]
+----
+include::{source}/order/OrderManagement.java[tags=class]
+----
+endif::[]
+
+. Run the `ApplicationModularityTests`.
+
 ifdef::educates[]
-
-Expand the section below for clickable instructions.
-
 [source, section:begin]
 ----
-title: "Clickable instructions"
+title: "Expand for clickable instructions"
 ----
-
 [source, editor:append-lines-to-file]
 ----
+title: "Create OrderRepository"
 file: ~/exercises/src/main/java/com/example/app/order/OrderRepository.java
 text: |
 	package com.example.app.order;
@@ -44,42 +54,27 @@ text: |
 	@Repository
 	class OrderRepository {}
 ----
-
-[source, section:end]
-----
-----
-
-endif::[]
-
-
-In `OrderManagement`, create a Spring bean reference to the new `OrderRepository` class you just created.
-
-ifndef::educates[]
-[source, java]
-----
-include::{source}/order/OrderManagement.java[tags=class]
-----
-endif::[]
-
-ifdef::educates[]
-
-Expand the section below for clickable instructions.
-
-[source, section:begin]
-----
-title: "Clickable instructions"
-----
-
 [source, editor:select-matching-text]
 ----
+title: "Add a reference to OrderRepository in OrderManagement"
 file: ~/exercises/src/main/java/com/example/app/order/OrderManagement.java
 text: "public class OrderManagement {}"
 before: 2
 after: 0
-----
+cascade: true
+description: |
+	import lombok.RequiredArgsConstructor;
 
+	@Component
+	@RequiredArgsConstructor
+	public class OrderManagement {
+
+		private final OrderRepository repository;
+	}
+----
 [source, editor:replace-text-selection]
 ----
+hidden: true
 file: ~/exercises/src/main/java/com/example/app/order/OrderManagement.java
 text: |
 	import lombok.RequiredArgsConstructor;
@@ -91,30 +86,20 @@ text: |
 		private final OrderRepository repository;
 	}
 ----
-
+[source, terminal:execute]
+----
+title: “Run test”
+command: mvnw test
+----
 [source, section:end]
 ----
 ----
-
 endif::[]
 
-ifndef::educates[]
-Re-run `ApplicationModularityTests`.
-endif::[]
-
-ifdef::educates[]
-Run the `ApplicationModularityTests` you learned about in the previous lab.
-
-[source, terminal:execute]
-----
-command: mvnw test
-----
-endif::[]
-
-Recall that `OrderManagement` is public and is labeled with `+`.
-In contrast, `OrderRepository` is detected as an *internal* module component and labeled accordingly with `o`).
-
-[source, bash]
+Examine the output.
+`OrderManagement` is public and is labeled with `+`.
+In contrast, `OrderRepository` is identified as an *internal* module component and labeled accordingly with `o`.
+[source, text]
 ----
 …
 # Order
@@ -125,30 +110,30 @@ In contrast, `OrderRepository` is detected as an *internal* module component and
   + ….OrderManagement
   o ….OrderRepository
 ----
-
-To highlight the impact of Java visibility modifiers—`public`, `default/package-private`, etc—on the accessibility of classes from different packages, try adding a reference to `OrderRepository` in `ApplicationModularityTests` and see how the compiler prevents that.
-
-
+To highlight the impact of Java visibility modifiers—`public`, `default/package-private`, etc—on the accessibility of classes between packages (aka between modules), try adding a reference to `OrderRepository` in `ApplicationModularityTests` and see how the compiler responds.
 ifdef::educates[]
-
-Expand the section below for clickable instructions.
-
 [source, section:begin]
 ----
-title: "Clickable instructions"
+title: "Expand for clickable instructions"
 ----
-
 [source, editor:select-matching-text]
 ----
+title: "Add reference to OrderRepository in ApplicationModularityTests"
 file: ~/exercises/src/test/java/com/example/app/ApplicationModularityTests.java
-
 text: "class ApplicationModularityTests {"
 before: 0
 after: 0
-----
+cascade: true
+description: |
+	import com.example.app.order.OrderRepository;
 
+	class ApplicationModularityTests {
+
+		OrderRepository orderRepository;
+----
 [source, editor:replace-text-selection]
 ----
+hidden: true
 file: ~/exercises/src/test/java/com/example/app/ApplicationModularityTests.java
 text: |
 	import com.example.app.order.OrderRepository;
@@ -157,21 +142,18 @@ text: |
 
 		OrderRepository orderRepository;
 ----
-
 [source, terminal:execute]
 ----
+title: “Run test”
 command: mvnw test
 ----
-
 [source, section:end]
 ----
 ----
-
 endif::[]
 
 You should see a compilation error since `OrderRepository` can only be accessed from within the same package.
-
-[source, bash]
+[source, text]
 ----
 [INFO] -------------------------------------------------------------
 [ERROR] COMPILATION ERROR :
@@ -179,43 +161,41 @@ You should see a compilation error since `OrderRepository` can only be accessed 
 [ERROR] …/src/test/java/com/example/app/ApplicationModularityTests.java:[24,29] com.example.app.order.OrderRepository is not public in com.example.app.order; cannot be accessed from outside package
 ----
 
-The solution is to make `OrderRepository` public.
-Then, re-run `ApplicationModularityTests` to validate that the compilation now succeeds.
+. Resolve the compilation error by making `OrderRepository` public.
+
+. Re-run `ApplicationModularityTests` to validate that the compilation now succeeds.
 
 ifdef::educates[]
-
-Expand the section below for clickable instructions.
-
 [source,section:begin]
 ----
-title: "Clickable instructions"
+title: "Expand for clickable instructions"
 ----
-
 [source, editor:select-matching-text]
 ----
+title: "Make OrderRepository public"
 file: ~/exercises/src/main/java/com/example/app/order/OrderRepository.java
 text: class OrderRepository
+cascade: true
+description: public class OrderRepository
 ----
-
 [source, editor:replace-text-selection]
 ----
 file: ~/exercises/src/main/java/com/example/app/order/OrderRepository.java
 text: public class OrderRepository
+hidden: true
 ----
-
 [source, terminal:execute]
 ----
+title: “Run test”
 command: mvnw test
 ----
-
 [source,section:end]
 ----
 ----
-
 endif::[]
 
-Now, both components should be marked as public.
-[source, bash]
+Examine the output. Both components should now be marked as public.
+[source, text]
 ----
 …
 # Order
@@ -234,11 +214,20 @@ Let's explore how Spring Modulith offers finer-grain control over the visibility
 
 [[module-design.control-visibility.nested-packages]]
 == 👣 Hiding components in nested packages
+
 . Introduce a package named `order.persistence` and move `OrderRepository` to that package.
 
+. Re-run `ApplicationModularityTests`.
+
 ifdef::educates[]
+[source,section:begin]
+----
+title: "Expand for clickable instructions"
+----
 [source, terminal:execute]
 ----
+prefix: Editor
+title: "Move OrderRepository to subpackage"
 command: |
     # Create directory, move file, update package declaration
 	mkdir -p src/main/java/com/example/app/order/persistence && \
@@ -246,35 +235,37 @@ command: |
         src/main/java/com/example/app/order/persistence/ && \
 	sed -i "s/package com\.example\.app\.order;/package com\.example\.app\.order\.persistence;/" \
         src/main/java/com/example/app/order/persistence/OrderRepository.java
-    # Update the import statement in classes that reference `OrderRepository`.
+    # Update the import statement in classes that reference OrderRepository
         sed -i "s/import com\.example\.app\.order.\OrderRepository;/import com\.example\.app\.order\.persistence.\OrderRepository;/" \
             src/test/java/com/example/app/ApplicationModularityTests.java
         sed -i "s/@Component/import com\.example\.app\.order\.persistence.\OrderRepository;\n\n@Component/" \
             src/main/java/com/example/app/order/OrderManagement.java
+cascade: true
+description: |
+    Execute to move and refactor OrderRepository.
 ----
-
-Make sure that you also update the import statement in each of the classes that reference `OrderRepository`.
-
+[source, dashboard:reload-dashboard]
+----
+name: Editor
+cascade: true
+hidden: true
+----
+[source, editor:open-file]
+----
+hidden: true
+file: ~/exercises/src/main/java/com/example/app/order/persistence/OrderRepository.java
+----
 [source, terminal:execute]
 ----
-command: |
-	sed -i "s/import com\.example\.app\.order.\OrderRepository;/import com\.example\.app\.order\.persistence.\OrderRepository;/" src/test/java/com/example/app/ApplicationModularityTests.java
-	sed -i "s/@Component/import com\.example\.app\.order\.persistence.\OrderRepository;\n\n@Component/" src/main/java/com/example/app/order/OrderManagement.java
-----
-endif::[]
-
-. Re-run `ApplicationModularityTests`.
-+
-ifdef::educates[]
-[source, terminal:execute]
-----
+title: “Run test”
 command: mvnw test
 ----
-+
+[source,section:end]
+----
+----
 endif::[]
 
-Notice that removing `OrderRepository` from the API package of the `order` module by simply relocating the class to a sub-package is sufficient for Spring Modulith to recognize it as an internal component.
-+
+Examine the output. Notice that simply moving `OrderRepository` out of the API package of the `order` module and into a sub-package is sufficient for Spring Modulith to identify it as an internal component.
 [source, text]
 ----
 # Order
@@ -286,7 +277,8 @@ Notice that removing `OrderRepository` from the API package of the `order` modul
   o ….persistence.OrderRepository
 ----
 
-. Add a constructor to the `Application` class that refers to the `OrderRepository`.
+. Next, open the main `Application` class and add a constructor that refers to the `OrderRepository`.
+ifndef::educates[]
 +
 [source, java]
 ----
@@ -296,16 +288,67 @@ class Application {
 	Application(OrderRepository repository) {}
 }
 ----
+endif::[]
 
-. Re-run `ApplicationModularityTests` and see how it fails as the reference to an application module internal type is invalid.
+. Re-run `ApplicationModularityTests`.
+
+ifdef::educates[]
+[source,section:begin]
+----
+title: "Expand for clickable instructions"
+----
+[source, editor:select-matching-text]
+----
+title: "Add a reference to OrderRepository in Application"
+file: ~/exercises/src/main/java/com/example/app/Application.java
+text: "@SpringBootApplication"
+before: 0
+after: 1
+cascade: true
+description: |
+    @SpringBootApplication
+    public class Application {
+
+        Application(OrderRepository repository) {}
+----
+[source, editor:replace-text-selection]
+----
+hidden: true
+file: ~/exercises/src/main/java/com/example/app/Application.java
+text: |
+    import com.example.app.order.persistence.OrderRepository;
+
+    @SpringBootApplication
+    public class Application {
+
+        Application(OrderRepository repository) {}
+----
+[source, terminal:execute]
+----
+title: “Run test”
+command: mvnw test
+----
+[source,section:end]
+----
+----
+endif::[]
+
+Examine the output. You should see that the test fails as the reference to an application module *internal* type is invalid.
+[source, java]
+----
+TODO:
+CHECK THIS -- NOT GETTING TEST FAILURE HERE
+----
 
 [[module-design.control-visibility.named-interfaces]]
 == 👣 Named interfaces
 
+Named interfaces provide a flexible way of selectively exposing additional types in an application modules API.
+
 . Annotate `OrderRepository` with `@NamedInterface`.
 
-+
 ifndef::educates[]
++
 [source, java]
 ----
 import org.springframework.stereotype.Repository;
@@ -315,8 +358,59 @@ class OrderRepository {}
 ----
 endif::[]
 
-. Re-run `ApplicationModularityTests` and inspect the output.
-+
+. Re-run `ApplicationModularityTests`
+
+ifdef::educates[]
+[source, section:begin]
+----
+title: "Expand for clickable instructions"
+----
+[source, editor:select-matching-text]
+----
+title: "Annotate OrderRepository with @NamedInterface"
+file: ~/exercises/src/main/java/com/example/app/order/persistence/OrderRepository.java
+text: "@Repository"
+before: 1
+after: 0
+cascade: true
+description: |
+	import org.springframework.stereotype.Repository;
+    import org.springframework.stereotype.NamedInterface;
+
+    @Repository
+    @NamedInterface
+	public class OrderRepository {}
+----
+[source, editor:replace-text-selection]
+----
+hidden: true
+file: ~/exercises/src/main/java/com/example/app/order/persistence/OrderRepository.java
+text: |
+    import org.springframework.modulith.NamedInterface;
+
+    @Repository
+    @NamedInterface
+----
+[source, terminal:execute]
+----
+title: "Run test"
+command: mvnw test
+----
+[source, section:end]
+----
+----
+endif::[]
+
+Examine the output and note the following changes:
+
+* The output lists two named interfaces.
+The _unnamed_ interface contains all types contained in the application module's base API package.
+This particular interface always exists implicitly.
+Furthermore, a second named interface _persistence_ exists.
+It's a result of us annotating `OrderRepository` with `@NamedInterface` and named by the local package name containing the annotated type.
+* `OrderRepository` being assigned to a named interface now makes it a part of the overall application module API (note the `+` sign in front of its Spring bean listing).
+That in turn causes the verification to not fail anymore.
+
 [source, text]
 ----
 # Order
@@ -330,18 +424,5 @@ endif::[]
   + ….OrderManagement
   + ….persistence.OrderRepository
 ----
-+
-Note the following changes:
-+
-* The output lists two named interfaces.
-The _unnamed_ interface contains all types contained in the application module's base API package.
-This particular interface always exists implicitly.
-Furthermore, a second named interface _persistence_ exists.
-It's a result of us annotating `OrderRepository` with `@NamedInterface` and named by the local package name containing the annotated type.
-* `OrderRepository` being assigned to a named interface now makes it a part of the overall application module API (note the `+` sign in front of its Spring bean listing).
-That in turn causes the verification to not fail anymore.
 
-Named interfaces provide a flexible way of selectively exposing additional types in an application modules API.
-We will learn how to use them to explicitly control allowed dependencies between application modules in xref:204-lab-explicit-dependencies.adoc[module-design.explicit-dependencies].
-
-
+In the next lab, xref:204-lab-explicit-dependencies.adoc[module-design.explicit-dependencies], we will learn how to use named interfaces to explicitly control allowed dependencies between application modules.

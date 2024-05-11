@@ -14,6 +14,7 @@ You'll learn how to…
 
 . Create an application module package `inventory`.
 . Add an application service `Inventory` inside that package.
+ifndef::educates[]
 +
 [source, java]
 ----
@@ -28,9 +29,92 @@ import org.springframework.stereotype.Component;
 public class Inventory {
 }
 ----
+endif::[]
 
-. Run modularity tests and see the module listed including the `Inventory` component.
+. Run modularity tests.
+
+ifdef::educates[]
+[source, section:begin]
+----
+title: "Expand for clickable instructions"
+----
+[source, terminal:execute]
+----
+prefix: Editor
+title: "Create inventory module and Inventory class"
+command: "mkdir -p src/main/java/com/example/app/inventory && cat /dev/null > src/main/java/com/example/app/inventory/Inventory.java"
+cascade: true
+description: |
+    package com.example.app.inventory;
+
+    import lombok.RequiredArgsConstructor;
+
+    import org.springframework.stereotype.Component;
+
+    @Component
+    @RequiredArgsConstructor
+    public class Inventory {
+    }
+----
+[source, dashboard:reload-dashboard]
+----
+name: Editor
+cascade: true
+hidden: true
+----
+[source, editor:append-lines-to-file]
+----
+hidden: true
+file: ~/exercises/src/main/java/com/example/app/inventory/Inventory.java
+text: |
+    package com.example.app.inventory;
+
+    import lombok.RequiredArgsConstructor;
+
+    import org.springframework.stereotype.Component;
+
+    @Component
+    @RequiredArgsConstructor
+    public class Inventory {
+    }
+----
+[source, terminal:execute]
+----
+title: "Run test"
+command: mvnw test
+----
+[source, section:end]
+----
+----
+endif::[]
+
+Examine the output. You should see the new module listed, including the `Inventory` component.
+ifndef::educates[]
++
+endif::[]
+[source, text]
+----
+# Inventory
+> Logical name: inventory
+> Base package: com.example.app.inventory
+> Direct module dependencies: none
+> Spring beans:
+  + ….Inventory
+
+# Order
+> Logical name: order
+> Base package: com.example.app.order
+> Named interfaces:
+  + NamedInterface: name=<<UNNAMED>>, types=[ c.e.a.o.OrderManagement ]
+  + NamedInterface: name=persistence, types=[ c.e.a.o.p.OrderRepository ]
+> Direct module dependencies: none
+> Spring beans:
+  + ….OrderManagement
+  + ….persistence.OrderRepository
+----
+
 . In `OrderManagement` add a dependency to the Inventory.
+ifndef::educates[]
 +
 [source, java]
 ----
@@ -49,9 +133,66 @@ public class OrderManagement {
 	private final Inventory inventory;
 }
 ----
+endif::[]
 
-. Run the modularity tests and see how the model now reflects the cross-application-module dependency we introduced.
+. Run the modularity tests.
+
+ifdef::educates[]
+[source, section:begin]
+----
+title: "Expand for clickable instructions"
+----
+[source, editor:select-matching-text]
+----
+title: "Add a reference to Inventory in OrderManagement"
+file: ~/exercises/src/main/java/com/example/app/order/OrderManagement.java
+text: "class OrderManagement"
+before: 2
+after: 0
+cascade: true
+description: |
+    package com.example.app.order;
+
+    import lombok.RequiredArgsConstructor;
+
+    import org.springframework.stereotype.Component;
+
+    import com.example.app.inventory.Inventory;
+
+    @Component
+    @RequiredArgsConstructor
+    public class OrderManagement {
+
+        private final Inventory inventory;
+    }
+----
+[source,editor:replace-text-selection]
+----
+hidden: true
+file: ~/exercises/src/main/java/com/example/app/order/OrderManagement.java
+text: |
+    import com.example.app.inventory.Inventory;
+
+    @Component
+    @RequiredArgsConstructor
+    public class OrderManagement {
+
+        private final Inventory inventory;
+----
+[source, terminal:execute]
+----
+title: "Run test"
+command: mvnw test
+----
+[source, section:end]
+----
+----
+endif::[]
+
+Examine the output. Note that the model now reflects the cross-application-module dependency we introduced.
+ifndef::educates[]
 +
+endif::[]
 [source, text]
 ----
 # Inventory
@@ -63,6 +204,7 @@ public class OrderManagement {
 ----
 
 . Introduce a dependency from the `Inventory` to the `OrderManagement`.
+ifndef::educates[]
 +
 [source, java]
 ----
@@ -81,5 +223,68 @@ public class Inventory {
 	private final OrderManagement orders;
 }
 ----
+endif::[]
 
-. Re-run the modularity test and see it fail. -> cyclic dependency.
+. Re-run the modularity test.
+
+ifdef::educates[]
+[source, section:begin]
+----
+title: "Expand for clickable instructions"
+----
+[source, editor:select-matching-text]
+----
+title: "Add a reference to OrderManagement in Inventory"
+file: ~/exercises/src/main/java/com/example/app/inventory/Inventory.java
+text: "class Inventory"
+before: 2
+after: 0
+cascade: true
+description: |
+    package com.example.app.inventory;
+
+    import lombok.RequiredArgsConstructor;
+
+    import org.springframework.stereotype.Component;
+
+    import com.example.app.order.OrderManagement;
+
+    @Component
+    @RequiredArgsConstructor
+    public class Inventory {
+
+        private final OrderManagement orders;
+    }
+----
+[source,editor:replace-text-selection]
+----
+hidden: true
+file: ~/exercises/src/main/java/com/example/app/inventory/Inventory.java
+text: |
+    import com.example.app.order.OrderManagement;
+
+    @Component
+    @RequiredArgsConstructor
+    public class Inventory {
+
+        private final OrderManagement orders;
+----
+[source, terminal:execute]
+----
+title: "Run test"
+command: mvnw test
+----
+[source, section:end]
+----
+----
+endif::[]
+
+Examine the output. You should see the test fail because of the cyclic dependency.
+ifndef::educates[]
++
+endif::[]
+[source, text]
+----
+TODO:
+CHECK THIS -- NOT GETTING TEST FAILURE HERE
+----

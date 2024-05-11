@@ -52,7 +52,7 @@ ifdef::educates[]
 ----
 title: "Expand for clickable instructions"
 ----
-[source, terminal:execute-all]
+[source, terminal:execute]
 ----
 prefix: Editor
 title: "Create test to print modules"
@@ -114,7 +114,7 @@ Examine the output and notice that it does not list any Spring Modulith specific
 ifndef::educates[]
 +
 endif::[]
-[source, bash]
+[source, text]
 ----
 [INFO] -------------------------------------------------------
 [INFO]  T E S T S
@@ -136,7 +136,7 @@ ifdef::educates[]
 ----
 title: "Expand for clickable instructions"
 ----
-[source, terminal:execute-all]
+[source, terminal:execute]
 ----
 prefix: Editor
 title: "Create order module"
@@ -182,7 +182,7 @@ Examine the output and notice that an application module named `Order` is listed
 ifndef::educates[]
 +
 endif::[]
-[source, bash]
+[source, text]
 ----
 [INFO] -------------------------------------------------------
 [INFO]  T E S T S
