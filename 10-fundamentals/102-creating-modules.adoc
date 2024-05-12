@@ -29,9 +29,9 @@ class ApplicationModularityTests {
 endif::[]
 
 . Within that class, create a test case to derive the application's module model.
-Create a new instance of `ApplicationModules` pointing to the root Spring Boot application class.
+Create a new instance of `ApplicationModules` pointing to the root Spring Boot application class and print the result to the console.
 
-. Print the result to the console.
+. Execute the test.
 +
 ifndef::educates[]
 [source, java]
@@ -44,51 +44,23 @@ void bootstrapsApplicationModules() {
 	System.out.println(modules);
 }
 ----
++
 endif::[]
-+
+
 ifdef::educates[]
-Expand the section below for clickable instructions.
-+
 [source, section:begin]
 ----
-title: "Clickable instructions"
+title: "Expand for clickable instructions"
 ----
-+
-[source, terminal:execute-all]
+[source, terminal:execute]
 ----
-command: mkdir -p src/test/java/com/example/app
-autostart: true
-hidden: true
-----
-+
-[source, dashboard:reload-dashboard]
-----
-name: Editor
-autostart: true
-hidden: true
-----
-+
-[source, editor:append-lines-to-file]
-----
-file: ~/exercises/src/test/java/com/example/app/ApplicationModularityTests.java
-text: |
+prefix: Editor
+title: "Create test to print modules"
+command: "mkdir -p src/test/java/com/example/app && cat /dev/null > src/test/java/com/example/app/ApplicationModularityTests.java"
+cascade: true
+description: |
 	package com.example.app;
 
-	class ApplicationModularityTests {}
-----
-+
-[source, editor:select-matching-text]
-----
-file: ~/exercises/src/test/java/com/example/app/ApplicationModularityTests.java
-text: "class ApplicationModularityTests {"
-before: 0
-after: 1
-----
-+
-[source, editor:replace-text-selection]
-----
-file: ~/exercises/src/test/java/com/example/app/ApplicationModularityTests.java
-text: |
 	import org.junit.jupiter.api.Test;
 	import org.springframework.modulith.core.ApplicationModules;
 
@@ -103,23 +75,46 @@ text: |
 		}
 	}
 ----
-+
+[source, dashboard:reload-dashboard]
+----
+name: Editor
+cascade: true
+hidden: true
+----
+[source, editor:append-lines-to-file]
+----
+hidden: true
+file: ~/exercises/src/test/java/com/example/app/ApplicationModularityTests.java
+text: |
+	package com.example.app;
+
+	import org.junit.jupiter.api.Test;
+	import org.springframework.modulith.core.ApplicationModules;
+
+	class ApplicationModularityTests {
+
+    @Test
+    void bootstrapsApplicationModules() {
+    var modules = ApplicationModules.of(Application.class);
+    System.out.println(modules);
+    }
+	}
+----
+[source, terminal:execute]
+----
+title: “Run test”
+command: mvnw test
+----
 [source, section:end]
 ----
 ----
 endif::[]
-+
-Execute the test and note, how the output does not list any Spring Modulith specific information.
-+
-ifdef::educates[]
-[source, terminal:execute]
-----
-command: mvnw test
-----
+
+Examine the output and notice that it does not list any Spring Modulith specific information.
+ifndef::educates[]
 +
 endif::[]
-
-[source, bash]
+[source, text]
 ----
 [INFO] -------------------------------------------------------
 [INFO]  T E S T S
@@ -131,33 +126,39 @@ endif::[]
 [[fundamentals.creating-modules.adding-a-module]]
 == 👣 Adding a Module
 
-. Create a package `order`
-. Add a public type `OrderManagement` in that package and annotate the type with Spring's `@Component` annotation.
-+
+. Create a package `order`.
+Add a public type `OrderManagement` in that package and annotate the type with Spring's `@Component` annotation.
+
+. Re-run the test case
+
 ifdef::educates[]
-Expand the section below for clickable instructions.
-+
 [source, section:begin]
 ----
-title: "Clickable instructions"
+title: "Expand for clickable instructions"
 ----
-+
-[source, terminal:execute-all]
+[source, terminal:execute]
 ----
-command: mkdir -p src/main/java/com/example/app/order
-autostart: true
-hidden: true
+prefix: Editor
+title: "Create order module"
+command: "mkdir -p src/main/java/com/example/app/order && cat /dev/null > src/main/java/com/example/app/order/OrderManagement.java"
+cascade: true
+description: |
+	package com.example.app.order;
+
+	import org.springframework.stereotype.Component;
+
+	@Component
+	public class OrderManagement {}
 ----
-+
 [source, dashboard:reload-dashboard]
 ----
 name: Editor
-autostart: true
+cascade: true
 hidden: true
 ----
-+
 [source, editor:append-lines-to-file]
 ----
+hidden: true
 file: ~/exercises/src/main/java/com/example/app/order/OrderManagement.java
 text: |
 	package com.example.app.order;
@@ -167,23 +168,21 @@ text: |
 	@Component
 	public class OrderManagement {}
 ----
-+
+[source, terminal:execute]
+----
+title: “Run test”
+command: mvnw test
+----
 [source, section:end]
 ----
 ----
 endif::[]
 
-. Re-run the test case to see an application module named `Order` is listed, as well as `OrderManagement` as public component.
-+
-ifdef::educates[]
-[source, terminal:execute]
-----
-command: mvnw test
-----
+Examine the output and notice that an application module named `Order` is listed, as well as `OrderManagement` as a public component.
+ifndef::educates[]
 +
 endif::[]
-
-[source, bash]
+[source, text]
 ----
 [INFO] -------------------------------------------------------
 [INFO]  T E S T S
@@ -214,7 +213,7 @@ If you're having trouble with the code, expand this section for help.
 ----
 title: "Solution"
 ----
-
+*_src/test/java/com/example/app/ApplicationModularityTests.java_*
 [source, java]
 ----
 package com.example.app;
@@ -233,7 +232,7 @@ class ApplicationModularityTests {
 	}
 }
 ----
-
+*_src/main/java/com/example/app/order/OrderManagement.java_*
 [source, java]
 ----
 package com.example.app.order;
@@ -243,7 +242,6 @@ import org.springframework.stereotype.Component;
 @Component
 public class OrderManagement {}
 ----
-
 [source, section:end]
 ----
 ----

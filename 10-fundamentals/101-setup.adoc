@@ -1,6 +1,15 @@
 [[fundamentals.setup]]
 = 🧑‍💻 Spring Modulith Setup
 
+ifdef::educates[]
+[source, editor:open-file]
+----
+file: ~/exercises/pom.xml
+autostart: true
+hidden: true
+----
+endif::[]
+
 [[fundamentals.setup.objectives]]
 == 🎯 Objectives
 
@@ -14,8 +23,9 @@ You'll learn how to…
 == 👣 Build setup
 
 . Open `pom.xml` and add the Spring Modulith BOM in the `<dependencyManagement />` section.
-+
+
 ifndef::educates[]
++
 [source, xml, subs="attributes+"]
 ----
 <dependency>
@@ -28,36 +38,10 @@ ifndef::educates[]
 ----
 endif::[]
 
-ifdef::educates[]
-[source, editor:select-matching-text]
-----
-file: ~/exercises/pom.xml
-text: "<dependencyManagement>"
-before: 0
-after: 4
-----
-+
-[source, editor:replace-text-selection]
-----
-file: ~/exercises/pom.xml
-text: |
-		<dependencyManagement>
-			<dependencies>
-				<dependency>
-					<groupId>org.springframework.modulith</groupId>
-					<artifactId>spring-modulith-bom</artifactId>
-					<version>{spring-modulith-version}</version>
-					<type>pom</type>
-					<scope>import</scope>
-				</dependency>
-			</dependencies>
-		</dependencyManagement>
-----
-endif::[]
-
 . Add the `org.springframework:spring-modulith-starter-test` dependency in test scope to your `pom.xml`.
-+
+
 ifndef::educates[]
++
 [source, xml]
 ----
 <dependency>
@@ -68,17 +52,79 @@ ifndef::educates[]
 ----
 endif::[]
 
+. Run `mvn dependency:list -Dsort`. (It may take a few moments for the command to download dependencies in the background).
+
+ifndef::educates[]
++
+endif::[]
+
 ifdef::educates[]
+[source, section:begin]
+----
+title: "Expand for clickable instructions"
+----
+[source, editor:open-file]
+----
+title: "Add Spring Modulith BOM config to pom.xml"
+file: ~/exercises/pom.xml
+cascade: true
+description: |
+        <dependencyManagement>
+            <dependencies>
+                <dependency>
+                    <groupId>org.springframework.modulith</groupId>
+                    <artifactId>spring-modulith-bom</artifactId>
+                    <version>{spring-modulith-version}</version>
+                    <type>pom</type>
+                    <scope>import</scope>
+                </dependency>
+            </dependencies>
+        </dependencyManagement>
+----
 [source, editor:select-matching-text]
 ----
+file: ~/exercises/pom.xml
+text: "<dependencyManagement>"
+before: 0
+after: 4
+hidden: true
+cascade: true
+----
+[source, editor:replace-text-selection, subs="attributes+"]
+----
+hidden: true
+file: ~/exercises/pom.xml
+text: |
+        <dependencyManagement>
+            <dependencies>
+                <dependency>
+                    <groupId>org.springframework.modulith</groupId>
+                    <artifactId>spring-modulith-bom</artifactId>
+                    <version>{spring-modulith-version}</version>
+                    <type>pom</type>
+                    <scope>import</scope>
+                </dependency>
+            </dependencies>
+        </dependencyManagement>
+----
+[source, editor:select-matching-text]
+----
+title: "Add Spring Modulith starter to pom.xml"
 file: ~/exercises/pom.xml
 text: "<!-- Spring Modulith -->"
 before: 0
 after: 0
+cascade: true
+description: |
+			<dependency>
+				<groupId>org.springframework.modulith</groupId>
+				<artifactId>spring-modulith-starter-test</artifactId>
+				<scope>test</scope>
+			</dependency>
 ----
-+
 [source, editor:replace-text-selection]
 ----
+hidden: true
 file: ~/exercises/pom.xml
 text: |
 			<dependency>
@@ -87,19 +133,20 @@ text: |
 				<scope>test</scope>
 			</dependency>
 ----
-endif::[]
-
-. Run `./mvnw dependency:list -Dsort`.
-+
-ifdef::educates[]
 [source, terminal:execute]
 ----
-command: mvnw dependency:list -Dsort | grep -v Download | grep modulith
+title: List Spring Modulith dependencies
+command: mvnw dependency:list -Dsort | grep -v Download | grep "spring-modulith-.*:jar"
+----
+[source, section:end]
+----
 ----
 endif::[]
 
-. See how the output lists the Spring Modulith dependencies in test scope.
+Examine the output and notice the list of Spring Modulith dependencies in test scope.
+ifndef::educates[]
 +
+endif::[]
 [source, bash, subs="attributes+"]
 ----
 [INFO] org.springframework.modulith:spring-modulith-api:jar:{spring-modulith-version}:test -- module org.springframework.modulith.api [auto]
@@ -108,3 +155,66 @@ endif::[]
 [INFO] org.springframework.modulith:spring-modulith-starter-test:jar:{spring-modulith-version}:test -- module org.springframework.modulith.starter.test [auto]
 [INFO] org.springframework.modulith:spring-modulith-test:jar:{spring-modulith-version}:test -- module org.springframework.modulith.test [auto]
 ----
+
+ifdef::educates[]
+[[fundamentals.setup.help]]
+== 💡 Help!
+
+If you're having trouble with the code, expand this section for help.
+
+[source, section:begin]
+----
+title: "Solution"
+----
+*_src/pom.xml_*
+[source, xml, subs="attributes+"]
+----
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+
+	<artifactId>fundamentals-initial</artifactId>
+
+	<parent>
+		<groupId>de.odrotbohm.smdd</groupId>
+		<artifactId>fundamentals</artifactId>
+		<version>1.0-SNAPSHOT</version>
+		<relativePath>../pom.xml</relativePath>
+	</parent>
+
+	<name>1 - Fundamentals - Initial</name>
+
+	<dependencyManagement>
+		<dependencies>
+			<dependency>
+				<groupId>org.springframework.modulith</groupId>
+				<artifactId>spring-modulith-bom</artifactId>
+				<version>{spring-modulith-version}</version>
+				<type>pom</type>
+				<scope>import</scope>
+			</dependency>
+		</dependencies>
+	</dependencyManagement>
+
+	<dependencies>
+
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter</artifactId>
+		</dependency>
+
+		<dependency>
+			<groupId>org.springframework.modulith</groupId>
+			<artifactId>spring-modulith-starter-test</artifactId>
+			<scope>test</scope>
+		</dependency>
+
+	</dependencies>
+
+</project>
+----
+[source, section:end]
+----
+----
+endif::[]
