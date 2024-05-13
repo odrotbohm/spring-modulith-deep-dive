@@ -10,13 +10,13 @@ rm -rf $basedir
 # Scan folders starting with two digits
 for dir in [0-9][0-9]*/; do
 
-#    [[ $(basename $dir) == "00-introduction" ]] && continue
-
     # Move setup files
     target=${basedir}/workshops/${dir}
     mkdir -p $target
-    cp -r .educates/files/* $target
 
+    if [[ $(basename $dir) != "00-introduction" ]]; then
+        cp -r .educates/files/* $target
+    fi
 
     # Find all AsciiDoc files recursively
     find $dir -name "[0-9][0-9][0-9]*.adoc" -type f | while read -r file; do
