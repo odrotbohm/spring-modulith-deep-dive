@@ -1,0 +1,24 @@
+[[events.imperative]]
+= 🧑‍💻 Downsides of Imperative Interaction
+
+ifdef::educates[]
+[source, terminal:execute-all]
+----
+command: cd ~/exercises && clear
+autostart: true
+hidden: true
+----
+[source, dashboard:reload-dashboard]
+----
+name: Editor
+autostart: true
+hidden: true
+----
+endif::[]
+
+
+[[events.imperative.objectives]]
+== 🎯 Objectives
+
+== 👣 Integrating via `@EventListener`
+
