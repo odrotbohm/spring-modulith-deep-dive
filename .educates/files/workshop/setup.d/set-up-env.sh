@@ -7,6 +7,8 @@ solutionsDir="${SOLUTIONS_DIR// /}" # Removes spaces from the beginning and end
 vscodeFile=~/.vscode/settings.json
 mkdir -p ~/.vscode
 
+rm -rf ~/code/.git
+
 # Check if the environment variable exists and is not empty or blank
 # Also, check if the trimmed value represents an existing directory on disk
 if [ -n "$exercisesDir" ] && eval [ -d $exercisesDir ]; then
