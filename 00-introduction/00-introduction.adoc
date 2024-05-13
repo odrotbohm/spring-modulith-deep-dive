@@ -1,7 +1,6 @@
 [preface]
 [[introduction]]
 = Introduction
-:imagesdir: ../src/docs/asciidoc/images
 
 [[introduction.logistics]]
 == 📋 Logistics
@@ -31,33 +30,9 @@ ifdef::educates[]
 ____
 endif::[]
 
-[[introduction.domain]]
-== The domain
-
-The example we are going to use is rooted in the e-commerce domain.
-As the focus of Spring Modulith is creating a high-level functional structure and implementing and testing the interaction between the individual parts, we don't need to exhaustively cover the entire domain but will rather focus on the following arrangement:
-
-* A catalog that contains products, primarily consisting of a description and a price.
-* An order management module that contains orders consisting of line items referring to the products contained in the catalog.
-* An inventory management that keeps track of the stock for each product.
-
-.Our E-Commerce Domain
-
 ifndef::educates[]
-image::domain.png[width=500, align="center"]
+include::000-article-the-domain.adoc[leveloffset=+1]
 endif::[]
-ifdef::educates[]
-[source, subs="attributes+"]
-----
-![img]({imagesdir}/domain.png)
-----
-endif::[]
-
-The primary use case we will investigate in its implications on both the structural, consistency and interaction arrangement is the following: when an order is completed (i.e., flips a certain state), a variety of functionality will have to be triggered:
-
-* The inventory needs to update its stock to reflect the products referred to by the items contained in the order leaving the warehouse.
-* An email notification needs to be sent out to the customer.
-* A customer loyalty program needs to record bonus points reflecting the total value of the order.
 
 [[introduction.sample-code]]
 == 🧑‍💻 Sample Code
