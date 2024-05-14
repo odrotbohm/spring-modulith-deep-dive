@@ -1,8 +1,8 @@
 [[events.integration]]
-== 🧑‍💻 Integrating Modules Via Spring Application Events
+= 🧑‍💻 Integrating Modules Via Spring Application Events
 
 [[events.integration.objectives]]
-=== 🎯 Objectives
+== 🎯 Objectives
 
 You'll learn…
 
@@ -10,7 +10,7 @@ You'll learn…
 * … about the effect that switch has on how the code is executed and how it affects the consistency model of the overall arrangement.
 
 [[events.integration.at-event-listener]]
-=== 👣 Integrating via `@EventListener`
+== 👣 Integrating via `@EventListener`
 
 In this section we are going to refactor the interaction between `OrderManagement` and `InventoryManagement` to use Spring's `ApplicationEventPublisher` and explore how the event publication is executed.
 
@@ -81,7 +81,7 @@ We then see the log output for the inventory update and the email sending all ha
 You should also see the email sending taking roundabout one second, which means that we block the original transaction and cannot return the connection before that is completed although the primary business transaction only takes a couple of milliseconds.
 
 [[events.integration.a-failing-listener]]
-=== 👣 A Failing Event Listener
+== 👣 A Failing Event Listener
 
 Let us move on investigating what happens in case one of the listeners fails:
 
@@ -140,7 +140,7 @@ Due to the `RuntimeException` we throw at the very end of `OrderManagement.compl
 We would actually like to avoid that.
 
 [[events.integration.summary]]
-=== 💡 Summary
+== 💡 Summary
 
 In this lab we have seen how to replace direct Spring bean invocations by using Spring's application event bus.
 This allows us to avoid the dependencies from the order module to break the cycle we had previously introduced accidentally.

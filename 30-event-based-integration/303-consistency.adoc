@@ -1,5 +1,5 @@
 [[events.consistency]]
-== 📖 Consistency
+= 📖 Consistency
 
 * Simple ``@EventListener``s are triggered synchronously which means that they run inside the primary business transaction.
 * Challenges:

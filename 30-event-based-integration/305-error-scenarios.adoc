@@ -1,5 +1,5 @@
 [[events.error-scenarios]]
-== 📖 Error Scenarios
+= 📖 Error Scenarios
 
 * Failing listener -> event publication lost.
 

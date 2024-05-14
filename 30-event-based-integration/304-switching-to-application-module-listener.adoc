@@ -1,8 +1,8 @@
 [[events.application-module-listener]]
-== 🧑‍💻 Switching to `@ApplicationModuleListener`
+= 🧑‍💻 Switching to `@ApplicationModuleListener`
 
 [[events.application-module-listener.objectives]]
-=== 🎯 Objectives
+== 🎯 Objectives
 
 In this section you will learn how…
 
@@ -11,7 +11,7 @@ In this section you will learn how…
 - … to guard the asynchronous interaction against listener failures using the Event Publication Registry
 
 [[events.application-module-listener.steps]]
-=== 👣 Changing the listener execution model
+== 👣 Changing the listener execution model
 
 1. Replace the `@EventListener` annotation in both `InventoryManagement` and `EmailSender` with `@ApplicationEventListener`.
 2. Re-run the test and inspect log output.
@@ -169,7 +169,7 @@ Note how the failed execution leads to a transaction rollback and the listeners 
 In other words, this scenario does not suffer from the premature email publication we have seen in <<events.integration.a-failing-listener>>.
 
 [[events.application-module-listener.summary]]
-=== 💡 Summary
+== 💡 Summary
 
 We have switched to an integration mode in which the attached functionality is executed separately from the original unit of work.
 This allows the seamless integration of such functionality in a way that it does not negatively affect the primary use case.
