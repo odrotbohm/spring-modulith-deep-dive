@@ -29,11 +29,13 @@ endif::[]
 The starter pulls in the general registry infrastructure and Spring Boot auto-configuration to automatically hook into Spring's `ApplicationEventMulticaster` to keep track of the publications and decorate transactional event listeners to mark the publications as completed on listener success.
 
 
-. To see this working, simply re-run `OrderManagementIntegrationTests.completesOrder()` and inspect the log output.
-ifndef::educates[]
-+
-endif::[]
-[literal]
+. To see this working, simply re-run `OrderManagementIntegrationTests.completesOrder()`.
+
+Examine the log output.
+Note how, during the execution of the primary business method, the publication of the event triggers the registration of event publications with the registry.
+As both listeners complete successfully, the publication is marked completed on the corresponding threads.
+The test concludes by reporting that no publications are outstanding.
+[source, text]
 ----
 …     main : Started OrderManagementIntegrationTests in 1.911 seconds (process running for 2.648)
 …     main : Registering publication of com.example.app.order.OrderCompleted for com.example.app.inventory.Inventory.on(com.example.app.order.OrderCompleted).
@@ -46,10 +48,6 @@ endif::[]
 …   task-2 : Marking publication of event com.example.app.order.OrderCompleted to listener com.example.app.order.EmailSender.on(com.example.app.order.OrderCompleted) completed.
 … downHook : No publications outstanding!
 ----
-Note how, during the execution of the primary business method, the publication of the event triggers the registration of event publications with the registry.
-As both listeners complete successfully, the publication is marked completed on the corresponding threads.
-The test concludes by reporting that no publications are outstanding.
-
 
 . Tweak the `Inventory` to fail during the processing of the order by re-adding the `RuntimeException`.
 ifndef::educates[]
@@ -68,11 +66,13 @@ public class Inventory {
 ----
 endif::[]
 
-. Re-run the integration tests and inspect the log output.
-ifndef::educates[]
-+
-endif::[]
-[literal]
+. Re-run the integration tests.
+
+Examine the log output.
+Notice that the publications get registered as before, the `Inventory` listener fails as can be seen by the reported exception stack trace leaving the publication uncompleted.
+This is also reported in the eventual shutdown of the application context.
+
+[source, text]
 ----
 …     main : Started OrderManagementIntegrationTests in 1.859 seconds (process running for 2.576)
 …     main : Registering publication of com.example.app.order.OrderCompleted for com.example.app.inventory.Inventory.on(com.example.app.order.OrderCompleted).
@@ -92,8 +92,6 @@ java.lang.RuntimeException: null
 … downHook : Shutting down with the following publications left unfinished:
 … downHook : └─ com.example.app.order.OrderCompleted - com.example.app.inventory.Inventory.on(com.example.app.order.OrderCompleted)
 ----
-The publications get registered as before, the `Inventory` listener fails as can be seen by the reported exception stack trace leaving the publication uncompleted.
-This is also reported in the eventual shutdown of the application context.
 
 [[events.event-publication-registry.remove-at-enable-async]]
 == 👣 Remove obsolete `@EnableAsync` annotation

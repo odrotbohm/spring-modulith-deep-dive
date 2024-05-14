@@ -16,11 +16,11 @@ In this section you will learn how…
 
 . Replace the `@EventListener` annotation in both `InventoryManagement` and `EmailSender` with `@ApplicationEventListener`.
 
-. Re-run the test and inspect log output.
-ifndef::educates[]
-+
-endif::[]
-[literal]
+. Re-run the test.
+
+Examine the log output.
+
+[source, text]
 ----
 … main : Started OrderManagementIntegrationTests in 1.464 seconds (process running for 2.171)
 … main : Creating new transaction with name [com.example.app.order.OrderManagement.complete]: PROPAGATION_REQUIRED,ISOLATION_DEFAULT
@@ -59,9 +59,7 @@ endif::[]
 … main : Resuming suspended transaction after completion of inner transaction
 … main : Closing JPA EntityManager [SessionImpl(1977568029<open>)] after transaction
 ----
-ifndef::educates[]
-+
-endif::[]
+
 Our transactional execution arrangement got slightly more complicated.
 `OrderManagement.complete(…)` publishes events and they get registered for submission on transaction commit.
 The business method succeeds and the original transaction gets committed.
@@ -105,11 +103,12 @@ class OrderManagementIntegrationTests {
 ----
 endif::[]
 
-. Re-run `OrderManagementIntegrationTests` and watch the log output.
-ifndef::educates[]
-+
-endif::[]
-[literal]
+. Re-run `OrderManagementIntegrationTests`.
+
+Examine the log output.
+Notice that the invocation of our listener updating the inventory has been moved to a separate thread as we can see from the `task-1` thread name in the log output and gets an dedicated transaction started (1062114679).
+The same for the thread executing the email sending.
+[source, text]
 ----
 …   main : Started OrderManagementIntegrationTests in 1.505 seconds (process running for 2.177)
 …   main : Creating new transaction with name [com.example.app.order.OrderManagement.complete]: PROPAGATION_REQUIRED,ISOLATION_DEFAULT
@@ -142,8 +141,7 @@ endif::[]
 … task-2 : Committing JPA transaction on EntityManager [SessionImpl(1942841355<open>)]
 … task-2 : Closing JPA EntityManager [SessionImpl(1942841355<open>)] after transaction
 ----
-The invocation of our listener updating the inventory has been moved to a separate thread as we can see from the `task-1` thread name in the log output and gets an dedicated transaction started (1062114679).
-The same for the thread executing the email sending.
+
 The primary effect of that is that the original transaction does not need to be suspended anymore as the transaction created for the listener runs without an existing transaction in its execution context.
 This also means that the resources acquired by the original transaction can be freed early as evident from the interleaved log statement from the `main` thread.
 
@@ -170,10 +168,11 @@ public class OrderManagement {
 endif::[]
 
 . Re-run
-ifndef::educates[]
-+
-endif::[]
-[literal]
+
+Examine the log output.
+Note how the failed execution leads to a transaction rollback and the listeners _not_ being invoked, despite the event having been published.
+In other words, this scenario does not suffer from the premature email publication we have seen in <<events.integration.a-failing-listener>>.
+[source, text]
 ----
 … main : Started OrderManagementIntegrationTests in 1.494 seconds (process running for 2.258)
 … main : Creating new transaction with name [com.example.app.order.OrderManagement.complete]: PROPAGATION_REQUIRED,ISOLATION_DEFAULT
@@ -186,8 +185,6 @@ endif::[]
 … main : Rolling back JPA transaction on EntityManager [SessionImpl(923439967<open>)]
 … main : Closing JPA EntityManager [SessionImpl(923439967<open>)] after transaction
 ----
-Note how the failed execution leads to a transaction rollback and the listeners _not_ being invoked, despite the event having been published.
-In other words, this scenario does not suffer from the premature email publication we have seen in <<events.integration.a-failing-listener>>.
 
 [[events.application-module-listener.summary]]
 == 💡 Summary

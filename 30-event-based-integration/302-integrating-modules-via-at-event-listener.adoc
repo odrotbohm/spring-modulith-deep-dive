@@ -28,7 +28,7 @@ endif::[]
 Add a dependency to `ApplicationEventPublisher` instead and use it in a method named `complete()` to publish an instance of `OrderCompleted` instead of actively invoking methods on the just removed dependencies.
 ifndef::educates[]
 +
-[source, java,indent=0]
+[source, java, indent=0]
 ----
 private final ApplicationEventPublisher events;
 
@@ -68,11 +68,13 @@ void on(OrderCompleted event) {
 ----
 endif::[]
 
-. Run the `completesOrder()` in `OrderManagementIntegrationTests` and observe the log output.
-ifndef::educates[]
-+
-endif::[]
-[literal]
+. Run the `completesOrder()` in `OrderManagementIntegrationTests`.
+
+Observe the log output.
+Note how a transaction is created for the execution of `OrderManagement.complete(…)`.
+We then see the log output for the inventory update and the email sending all happening on the `main` thread.
+You should also see the email sending taking roundabout one second, which means that we block the original transaction and cannot return the connection before that is completed although the primary business transaction only takes a couple of milliseconds.
+[source, text]
 ----
 … main : Started OrderManagementIntegrationTests in 1.481 seconds (process running for 2.198)
 … main : Creating new transaction with name [com.example.app.order.OrderManagement.complete]: PROPAGATION_REQUIRED,ISOLATION_DEFAULT
@@ -89,9 +91,6 @@ endif::[]
 … main : Initiating transaction commit
 … main : Committing JPA transaction on EntityManager [SessionImpl(403583920<open>)]
 ----
-Note how a transaction is created for the execution of `OrderManagement.complete(…)`.
-We then see the log output for the inventory update and the email sending all happening on the `main` thread.
-You should also see the email sending taking roundabout one second, which means that we block the original transaction and cannot return the connection before that is completed although the primary business transaction only takes a couple of milliseconds.
 
 [[events.integration.a-failing-listener]]
 == 👣 A Failing Event Listener
@@ -110,11 +109,11 @@ public void updateStockFor(Order order) {
 ----
 endif::[]
 
-. Re-run `OrderManagementIntegrationTests.completesOrder()` and see how the test now fails and the log output changes to this.
-ifndef::educates[]
-+
-endif::[]
-[literal]
+. Re-run `OrderManagementIntegrationTests.completesOrder()`.
+
+Examine the log output to see how the test now fails.
+Note how the stock update fails, causing the email sending to be skipped entirely and the exception causing the transaction to be rolled back.
+[source, text]
 ----
 … main : Started OrderManagementIntegrationTests in 1.479 seconds (process running for 2.174)
 … main : Creating new transaction with name [com.example.app.order.OrderManagement.complete]: PROPAGATION_REQUIRED,ISOLATION_DEFAULT
@@ -130,16 +129,17 @@ endif::[]
 … main : Rolling back JPA transaction on EntityManager [SessionImpl(1617891184<open>)]
 … main : Closing JPA EntityManager [SessionImpl(1617891184<open>)] after transaction
 ----
-Note how the stock update fails, causes the email sending to be skipped entirely and the exception causing the transaction to be rolled back.
-
 
 . Remove the code throwing the `RuntimeException` from `InventoryManagement` and rather move the failure to the very end of `OrderManagement.complete(…)`.
 This way, we simulate an error occurring _after_ the event listeners have been executed.
-Re-run `OrderManagementIntegrationTests.completesOrder()` and look at the log output.
-ifndef::educates[]
-+
-endif::[]
-[literal]
+
+. Re-run `OrderManagementIntegrationTests.completesOrder()`
+
+Examine the log output.
+Note how the stock update is performed and the email is sent out.
+Due to the `RuntimeException` we throw at the very end of `OrderManagement.complete()` the transaction is rolled back eventually, leaving the email sent out for an uncompleted order.
+
+[source, text]
 ----
 … main : Started OrderManagementIntegrationTests in 1.463 seconds (process running for 2.262)
 … main : Creating new transaction with name [com.example.app.order.OrderManagement.complete]: PROPAGATION_REQUIRED,ISOLATION_DEFAULT
@@ -156,8 +156,7 @@ endif::[]
 … main : Rolling back JPA transaction on EntityManager [SessionImpl(1505756962<open>)]
 … main : Closing JPA EntityManager [SessionImpl(1505756962<open>)] after transaction
 ----
-Note how the stock update is performed and the email is sent out.
-Due to the `RuntimeException` we throw at the very end of `OrderManagement.complete()` the transaction is rolled back eventually, leaving the email sent out for an uncompleted order.
+
 We would actually like to avoid that.
 
 [[events.integration.summary]]
