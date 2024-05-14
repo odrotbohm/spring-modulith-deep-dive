@@ -104,13 +104,10 @@ endif::[]
 # Order
 > Logical name: order
 > Base package: com.example.app.order
-> Named interfaces:
-  + NamedInterface: name=<<UNNAMED>>, types=[ c.e.a.o.OrderManagement ]
-  + NamedInterface: name=persistence, types=[ c.e.a.o.p.OrderRepository ]
 > Direct module dependencies: none
 > Spring beans:
   + ….OrderManagement
-  + ….persistence.OrderRepository
+  o ….persistence.OrderRepository
 ----
 
 . In `OrderManagement` add a dependency to the Inventory.
@@ -195,12 +192,13 @@ ifndef::educates[]
 endif::[]
 [source, text]
 ----
-# Inventory
-> Logical name: inventory
-> Base package: com.example.app.inventory
-> Direct module dependencies: order
+# Order
+> Logical name: order
+> Base package: com.example.app.order
+> Direct module dependencies: inventory
 > Spring beans:
-  + ….Inventory
+  + ….OrderManagement
+  o ….persistence.OrderRepository
 ----
 
 . Introduce a dependency from the `Inventory` to the `OrderManagement`.
@@ -280,11 +278,27 @@ command: mvnw test
 endif::[]
 
 Examine the output. You should see the test fail because of the cyclic dependency.
+This is another example of how Spring Modulith enhances compilation checks over and above the capabilities of the Java compiler.
 ifndef::educates[]
 +
 endif::[]
 [source, text]
 ----
-TODO:
-CHECK THIS -- NOT GETTING TEST FAILURE HERE
+[INFO] -------------------------------------------------------
+[INFO]  T E S T S
+[INFO] -------------------------------------------------------
+[INFO] Running com.example.app.ApplicationModularityTests
+02:39:18.818 [main] INFO com.tngtech.archunit.core.PluginLoader -- Detected Java version 21.0.1
+[ERROR] Tests run: 1, Failures: 0, Errors: 1, Skipped: 0, Time elapsed: 0.726 s <<< FAILURE! -- in com.example.app.ApplicationModularityTests
+[ERROR] com.example.app.ApplicationModularityTests.bootstrapsApplicationModules -- Time elapsed: 0.711 s <<< ERROR!
+org.springframework.modulith.core.Violations:
+- Cycle detected: Slice inventory ->
+                Slice order ->
+                Slice inventory
+  1. Dependencies of Slice inventory
+    - Constructor <com.example.app.inventory.Inventory.<init>(com.example.app.order.OrderManagement)> has parameter of type <com.example.app.order.OrderManagement> in (Inventory.java:0)
+    - Field <com.example.app.inventory.Inventory.orders> has type <com.example.app.order.OrderManagement> in (Inventory.java:0)
+  2. Dependencies of Slice order
+    - Constructor <com.example.app.order.OrderManagement.<init>(com.example.app.inventory.Inventory, com.example.app.order.persistence.OrderRepository)> has parameter of type <com.example.app.inventory.Inventory> in (OrderManagement.java:0)
+    - Field <com.example.app.order.OrderManagement.inventory> has type <com.example.app.inventory.Inventory> in (OrderManagement.java:0)
 ----

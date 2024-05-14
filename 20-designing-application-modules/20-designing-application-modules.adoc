@@ -10,18 +10,3 @@ include::202-lab-application-module-visibility.adoc[leveloffset=+1]
 include::203-lab-application-module-relationships.adoc[leveloffset=+1]
 include::204-lab-explicit-dependencies.adoc[leveloffset=+1]
 endif::[]
-
-ifdef::educates[]
-[source, terminal:execute-all]
-----
-command: cd ~/exercises && clear
-autostart: true
-hidden: true
-----
-[source, dashboard:reload-dashboard]
-----
-name: Editor
-autostart: true
-hidden: true
-----
-endif::[]

@@ -1,6 +1,21 @@
 [[module-design.control-visibility]]
 = 🧑‍💻 Using Application Modules to control visibility
 
+ifdef::educates[]
+[source, terminal:execute-all]
+----
+command: cd ~/exercises && clear
+autostart: true
+hidden: true
+----
+[source, dashboard:reload-dashboard]
+----
+name: Editor
+autostart: true
+hidden: true
+----
+endif::[]
+
 [[module-design.control-visibility.objectives]]
 == 🎯 Objectives
 
@@ -207,7 +222,7 @@ Examine the output. Both components should now be marked as public.
   + ….OrderRepository
 ----
 
-While this solution works, it exposes `OrderRepository` to access from anywhere in the  application.
+While this solution works, it exposes `OrderRepository` to access from anywhere in the application.
 This is a clear indication that Java visibility modifiers are insufficient to protect bounded contexts within a monolithic code base.
 
 Let's explore how Spring Modulith offers finer-grain control over the visibility of this class.
@@ -231,22 +246,26 @@ title: "Move OrderRepository to subpackage"
 command: |
     # Create directory, move file, update package declaration
 	mkdir -p src/main/java/com/example/app/order/persistence && \
-    mv src/main/java/com/example/app/order/OrderRepository.java \
-        src/main/java/com/example/app/order/persistence/ && \
-	sed -i "s/package com\.example\.app\.order;/package com\.example\.app\.order\.persistence;/" \
-        src/main/java/com/example/app/order/persistence/OrderRepository.java
+    mv src/main/java/com/example/app/order/OrderRepository.java src/main/java/com/example/app/order/persistence/ && \
+	sed -i "s/package com\.example\.app\.order;/package com\.example\.app\.order\.persistence;/" src/main/java/com/example/app/order/persistence/OrderRepository.java
     # Update the import statement in classes that reference OrderRepository
-        sed -i "s/import com\.example\.app\.order.\OrderRepository;/import com\.example\.app\.order\.persistence.\OrderRepository;/" \
-            src/test/java/com/example/app/ApplicationModularityTests.java
-        sed -i "s/@Component/import com\.example\.app\.order\.persistence.\OrderRepository;\n\n@Component/" \
-            src/main/java/com/example/app/order/OrderManagement.java
+    sed -i "s/import com\.example\.app\.order.\OrderRepository;/import com\.example\.app\.order\.persistence.\OrderRepository;/" src/test/java/com/example/app/ApplicationModularityTests.java && \
+    sed -i "s/@Component/import com\.example\.app\.order\.persistence.\OrderRepository;\n\n@Component/" src/main/java/com/example/app/order/OrderManagement.java
+session: 2
 cascade: true
 description: |
-    Execute to move and refactor OrderRepository.
+    Click on this action to move and refactor OrderRepository.
 ----
-[source, dashboard:reload-dashboard]
+[source, terminal:execute]
 ----
-name: Editor
+command: clear
+session: 2
+cascade: true
+hidden: true
+----
+[source, editor:execute-command]
+----
+command: workbench.action.closeActiveEditor
 cascade: true
 hidden: true
 ----
@@ -277,7 +296,7 @@ Examine the output. Notice that simply moving `OrderRepository` out of the API p
   o ….persistence.OrderRepository
 ----
 
-. Next, open the main `Application` class and add a constructor that refers to the `OrderRepository`.
+. Next, open the main `Application` class and add a reference to `OrderRepository`. For example, you can add a constructor that takes an `OrderRepository` as an argument.
 ifndef::educates[]
 +
 [source, java]
@@ -333,11 +352,85 @@ command: mvnw test
 ----
 endif::[]
 
-Examine the output. You should see that the test fails as the reference to an application module *internal* type is invalid.
+Examine the output. If you were expecting compilation error because `OrderRepository` is considered internal to the `order` module, you might be surprised to see that the code still compiles successfully.
+
+
+This example highlights the inability of the Java compiler to recognize or enforce the scopes of visibility defined by Spring Modulith.
+The Java compiler recognizes `OrderRepository` as public, but it is not aware that it should be accessible publicly only within the `order` module, not outside of it.
+
+
+To compensate for this limitation, Spring Modulith provides a `verify()` method that will execute the additional checks.
+
+. Add a call to the `verify()` method in `ApplicationModularityTests`.
+
+ifndef::educates[]
++
 [source, java]
 ----
-TODO:
-CHECK THIS -- NOT GETTING TEST FAILURE HERE
+class ApplicationModularityTests {
+
+	OrderRepository orderRepository;
+
+	@Test
+	void bootstrapsApplicationModules() {
+
+		var modules = ApplicationModules.of(Application.class).verify();
+
+		System.out.println(modules);
+	}
+}
+----
+endif::[]
+
+. Re-run `ApplicationModularityTests` to validate that the compilation now succeeds.
+
+ifdef::educates[]
+[source,section:begin]
+----
+title: "Expand for clickable instructions"
+----
+[source, editor:select-matching-text]
+----
+title: "Add a call to ApplicationModules verify() method to ApplicationModularityTests"
+file: ~/exercises/src/test/java/com/example/app/ApplicationModularityTests.java
+text: "ApplicationModules.of(Application.class);"
+cascade: true
+description: |
+    var modules = ApplicationModules.of(Application.class).verify();
+----
+[source, editor:replace-text-selection]
+----
+hidden: true
+file: ~/exercises/src/test/java/com/example/app/ApplicationModularityTests.java
+text: |
+    ApplicationModules.of(Application.class).verify();
+----
+[source, terminal:execute]
+----
+title: “Run test”
+command: mvnw test
+----
+[source,section:end]
+----
+----
+endif::[]
+
+Examine the output. You should see that the test now fails as the reference to an application module *internal* type is invalid.
+[source, java]
+----
+[INFO] -------------------------------------------------------
+[INFO]  T E S T S
+[INFO] -------------------------------------------------------
+[INFO] Running com.example.app.ApplicationModularityTests
+02:07:18.909 [main] INFO com.tngtech.archunit.core.PluginLoader -- Detected Java version 21.0.1
+[ERROR] Tests run: 1, Failures: 0, Errors: 1, Skipped: 0, Time elapsed: 0.728 s <<< FAILURE! -- in com.example.app.ApplicationModularityTests
+[ERROR] com.example.app.ApplicationModularityTests.bootstrapsApplicationModules -- Time elapsed: 0.714 s <<< ERROR!
+org.springframework.modulith.core.Violations:
+- Module 'root:com.example.app' depends on non-exposed type com.example.app.order.persistence.OrderRepository within module 'order'!
+Application declares constructor Application(OrderRepository) in (Application.java:0)
+- Module 'root:com.example.app' depends on non-exposed type com.example.app.order.persistence.OrderRepository within module 'order'!
+Constructor <com.example.app.Application.<init>(com.example.app.order.persistence.OrderRepository)> has parameter of type <com.example.app.order.persistence.OrderRepository> in (Application.java:0)
+...
 ----
 
 [[module-design.control-visibility.named-interfaces]]
@@ -425,4 +518,68 @@ That in turn causes the verification to not fail anymore.
   + ….persistence.OrderRepository
 ----
 
-In the next lab, xref:204-lab-explicit-dependencies.adoc[module-design.explicit-dependencies], we will learn how to use named interfaces to explicitly control allowed dependencies between application modules.
+[[module-design.control-visibility.cleanup]]
+== 👣 Cleanup
+
+Reverse the last two changes.
+While they helped illustrate Spring Modulith features, exposing `OrderRepository` outside of the `order` module and referencing it from the main `Application` class aren't useful or necessary configurations.
+
+[source, editor:select-matching-text]
+----
+title: "Remove annotation of OrderRepository as @NamedInterface"
+file: ~/exercises/src/main/java/com/example/app/order/persistence/OrderRepository.java
+text: "@NamedInterface"
+before: 3
+after: 0
+cascade: true
+description: |
+	import org.springframework.stereotype.Repository;
+
+    @Repository
+	public class OrderRepository {}
+----
+[source, editor:replace-text-selection]
+----
+hidden: true
+file: ~/exercises/src/main/java/com/example/app/order/persistence/OrderRepository.java
+text: |
+
+    @Repository
+----
+
+[source, editor:select-matching-text]
+----
+title: "Remove reference to OrderRepository in Application class"
+file: ~/exercises/src/main/java/com/example/app/Application.java
+text: "@SpringBootApplication"
+before: 2
+after: 9
+cascade: true
+description: |
+    @SpringBootApplication
+    public class Application {
+
+        public static void main(String... args) throws Exception {
+            SpringApplication.run(Application.class, args);
+        }
+    }
+----
+[source, editor:replace-text-selection]
+----
+hidden: true
+file: ~/exercises/src/main/java/com/example/app/Application.java
+text: |
+    @SpringBootApplication
+    public class Application {
+
+        public static void main(String... args) throws Exception {
+            SpringApplication.run(Application.class, args);
+        }
+    }
+----
+
+In the next lab,
+ifndef::educates[]
+xref:204-lab-explicit-dependencies.adoc[module-design.explicit-dependencies],
+endif::[]
+we will learn how to use named interfaces to explicitly control allowed dependencies between application modules.
