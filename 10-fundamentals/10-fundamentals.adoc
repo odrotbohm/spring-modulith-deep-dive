@@ -9,17 +9,4 @@ include::102-creating-modules.adoc[leveloffset=+1]
 
 endif::[]
 
-ifdef::educates[]
-[source, terminal:execute-all]
-----
-command: cd ~/exercises && clear
-autostart: true
-hidden: true
-----
-[source, dashboard:reload-dashboard]
-----
-name: Editor
-autostart: true
-hidden: true
-----
-endif::[]
+
