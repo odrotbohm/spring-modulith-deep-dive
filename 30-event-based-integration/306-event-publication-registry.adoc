@@ -15,7 +15,8 @@ You will learn…
 [[events.event-publication-registry.steps]]
 == 👣 Add Spring Modulith's Event Publication Registry
 
-1. To make use of the Event Publication Registry add the Spring Modulith JPA starter to the `pom.xml`.
+. To make use of the Event Publication Registry add the Spring Modulith JPA starter to the `pom.xml`.
+ifndef::educates[]
 +
 [source, xml]
 ----
@@ -24,10 +25,14 @@ You will learn…
 	<artifactId>spring-modulith-starter-jpa</artifactId>
 </dependency>
 ----
+endif::[]
 The starter pulls in the general registry infrastructure and Spring Boot auto-configuration to automatically hook into Spring's `ApplicationEventMulticaster` to keep track of the publications and decorate transactional event listeners to mark the publications as completed on listener success.
 
-2. To see this working, simply re-run `OrderManagementIntegrationTests.completesOrder()` and inspect the log output.
+
+. To see this working, simply re-run `OrderManagementIntegrationTests.completesOrder()` and inspect the log output.
+ifndef::educates[]
 +
+endif::[]
 [literal]
 ----
 …     main : Started OrderManagementIntegrationTests in 1.911 seconds (process running for 2.648)
@@ -45,7 +50,9 @@ Note how, during the execution of the primary business method, the publication o
 As both listeners complete successfully, the publication is marked completed on the corresponding threads.
 The test concludes by reporting that no publications are outstanding.
 
-3. Tweak the `Inventory` to fail during the processing of the order by re-adding the `RuntimeException`.
+
+. Tweak the `Inventory` to fail during the processing of the order by re-adding the `RuntimeException`.
+ifndef::educates[]
 +
 [source, java]
 ----
@@ -59,9 +66,12 @@ public class Inventory {
 	}
 }
 ----
+endif::[]
 
-4. Re-run the integration tests and inspect the log output.
+. Re-run the integration tests and inspect the log output.
+ifndef::educates[]
 +
+endif::[]
 [literal]
 ----
 …     main : Started OrderManagementIntegrationTests in 1.859 seconds (process running for 2.576)
@@ -92,7 +102,9 @@ Declaring the Spring Modulith JPA starter brought in the `spring-modulith-events
 This not only contains the Spring Boot configuration to enable the Event Publication Registry, it also makes sure that the support for asynchronous method invocations is enabled automatically.
 Thus, we can remove the `@EnableAsync` annotation we had explicitly declared on our application class in <<events.application-module-listener.steps>>.
 
-1. Open up `Application.java` and remove the `@EnableAsync` annotation from the class declaration.
+
+. Open up `Application.java` and remove the `@EnableAsync` annotation from the class declaration.
+ifndef::educates[]
 +
 [source, java]
 ----
@@ -100,6 +112,7 @@ Thus, we can remove the `@EnableAsync` annotation we had explicitly declared on 
 @SpringBootApplication
 public class Application { /* … */ }
 ----
+endif::[]
 
 [[events.event-publication-registry.summary]]
 == 💡 Summary

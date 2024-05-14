@@ -6,16 +6,20 @@
 
 In this section you will learn how…
 
-- … to switch the module interaction to an asynchronous model by using the `@ApplicationEventListener` annotation
-- … that switch changes the consistency model of the interaction
-- … to guard the asynchronous interaction against listener failures using the Event Publication Registry
+* … to switch the module interaction to an asynchronous model by using the `@ApplicationEventListener` annotation
+* … that switch changes the consistency model of the interaction
+* … to guard the asynchronous interaction against listener failures using the Event Publication Registry
 
 [[events.application-module-listener.steps]]
 == 👣 Changing the listener execution model
 
-1. Replace the `@EventListener` annotation in both `InventoryManagement` and `EmailSender` with `@ApplicationEventListener`.
-2. Re-run the test and inspect log output.
+
+. Replace the `@EventListener` annotation in both `InventoryManagement` and `EmailSender` with `@ApplicationEventListener`.
+
+. Re-run the test and inspect log output.
+ifndef::educates[]
 +
+endif::[]
 [literal]
 ----
 … main : Started OrderManagementIntegrationTests in 1.464 seconds (process running for 2.171)
@@ -55,7 +59,9 @@ In this section you will learn how…
 … main : Resuming suspended transaction after completion of inner transaction
 … main : Closing JPA EntityManager [SessionImpl(1977568029<open>)] after transaction
 ----
+ifndef::educates[]
 +
+endif::[]
 Our transactional execution arrangement got slightly more complicated.
 `OrderManagement.complete(…)` publishes events and they get registered for submission on transaction commit.
 The business method succeeds and the original transaction gets committed.
@@ -66,7 +72,9 @@ Also, the listener is executed on the same (`main`) thread.
 The `@Async` annotation does not seem to be considered yet.
 The same applies to the second listener to send out emails.
 The original business transaction (`EntityManager` instance 1977568029) is closed eventually.
-3. To get the asynchronous execution working, add `@EnableAsync` on the main application class:
+
+. To get the asynchronous execution working, add `@EnableAsync` on the main application class:
+ifndef::educates[]
 +
 [source, java]
 ----
@@ -74,9 +82,12 @@ The original business transaction (`EntityManager` instance 1977568029) is close
 @SpringBootApplication
 public class Application { /* … */ }
 ----
-4. As we expect our listener to be executed on a separate thread, the call to `OrderManagement.complete()` will immediately return.
+endif::[]
+
+. As we expect our listener to be executed on a separate thread, the call to `OrderManagement.complete()` will immediately return.
 To make sure that the test doesn't quit before the listener has completed, let us add a `Thread.sleep()` to it for now.
 We will improve on that later.
+ifndef::educates[]
 +
 [source, java]
 ----
@@ -92,8 +103,12 @@ class OrderManagementIntegrationTests {
 	}
 }
 ----
-5. Re-run `OrderManagementIntegrationTests` and watch the log output.
+endif::[]
+
+. Re-run `OrderManagementIntegrationTests` and watch the log output.
+ifndef::educates[]
 +
+endif::[]
 [literal]
 ----
 …   main : Started OrderManagementIntegrationTests in 1.505 seconds (process running for 2.177)
@@ -132,7 +147,9 @@ The same for the thread executing the email sending.
 The primary effect of that is that the original transaction does not need to be suspended anymore as the transaction created for the listener runs without an existing transaction in its execution context.
 This also means that the resources acquired by the original transaction can be freed early as evident from the interleaved log statement from the `main` thread.
 
-6. To see how this arrangement reacts to the original business method failing eventually, throw a `RuntimeException` at the very end of it.
+
+. To see how this arrangement reacts to the original business method failing eventually, throw a `RuntimeException` at the very end of it.
+ifndef::educates[]
 +
 [source, java]
 ----
@@ -150,8 +167,12 @@ public class OrderManagement {
 	}
 }
 ----
-7. Re-run
+endif::[]
+
+. Re-run
+ifndef::educates[]
 +
+endif::[]
 [literal]
 ----
 … main : Started OrderManagementIntegrationTests in 1.494 seconds (process running for 2.258)

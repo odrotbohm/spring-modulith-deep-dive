@@ -14,14 +14,19 @@ You'll learn…
 
 In this section we are going to refactor the interaction between `OrderManagement` and `InventoryManagement` to use Spring's `ApplicationEventPublisher` and explore how the event publication is executed.
 
-1. Add a record `OrderCompleted` in the `order` package:
+
+. Add a record `OrderCompleted` in the `order` package:
+ifndef::educates[]
 +
 [source, java]
 ----
 public record OrderCompleted() {}
 ----
-2. In `OrderManagement` remove the dependencies to the `EmailSender` and the `Inventory`.
+endif::[]
+
+. In `OrderManagement` remove the dependencies to the `EmailSender` and the `Inventory`.
 Add a dependency to `ApplicationEventPublisher` instead and use it in a method named `complete()` to publish an instance of `OrderCompleted` instead of actively invoking methods on the just removed dependencies.
+ifndef::educates[]
 +
 [source, java,indent=0]
 ----
@@ -36,9 +41,11 @@ void complete(Order order) {
 	log.info("Finish order completion.");
 }
 ----
+endif::[]
 
-3. In `InventoryManagement`, a method annotated with `@EventListener` to receive `OrderCompleted` events and delegate to the already existing `updateStockFor(…)` method.
+. In `InventoryManagement`, a method annotated with `@EventListener` to receive `OrderCompleted` events and delegate to the already existing `updateStockFor(…)` method.
 Use the reference to `OrderManagement` to look up the order to be processed by using the identifier contained in the event.
+ifndef::educates[]
 +
 [source, java]
 ----
@@ -47,8 +54,10 @@ void on(OrderCompleted event) {
 	updateStockFor(orders.findById(event.orderIdentifier()));
 }
 ----
+endif::[]
 
-4. Similarly, add an event listener method in `EmailSender`.
+. Similarly, add an event listener method in `EmailSender`.
+ifndef::educates[]
 +
 [source, java]
 ----
@@ -57,8 +66,12 @@ void on(OrderCompleted event) {
 	sendEmailFor(event.orderIdentifier());
 }
 ----
-5. Run the `completesOrder()` in `OrderManagementIntegrationTests` and observe the log output.
+endif::[]
+
+. Run the `completesOrder()` in `OrderManagementIntegrationTests` and observe the log output.
+ifndef::educates[]
 +
+endif::[]
 [literal]
 ----
 … main : Started OrderManagementIntegrationTests in 1.481 seconds (process running for 2.198)
@@ -85,7 +98,8 @@ You should also see the email sending taking roundabout one second, which means 
 
 Let us move on investigating what happens in case one of the listeners fails:
 
-1. Change the processing of the in `Inventory` to throw a `RuntimeException`.
+. Change the processing of the in `Inventory` to throw a `RuntimeException`.
+ifndef::educates[]
 +
 [source, java]
 ----
@@ -94,8 +108,12 @@ public void updateStockFor(Order order) {
 	throw new RuntimeException(); // <- add this
 }
 ----
-2. Re-run `OrderManagementIntegrationTests.completesOrder()` and see how the test now fails and the log output changes to this:
+endif::[]
+
+. Re-run `OrderManagementIntegrationTests.completesOrder()` and see how the test now fails and the log output changes to this.
+ifndef::educates[]
 +
+endif::[]
 [literal]
 ----
 … main : Started OrderManagementIntegrationTests in 1.479 seconds (process running for 2.174)
@@ -114,10 +132,13 @@ public void updateStockFor(Order order) {
 ----
 Note how the stock update fails, causes the email sending to be skipped entirely and the exception causing the transaction to be rolled back.
 
-3. Remove the code throwing the `RuntimeException` from `InventoryManagement` and rather move the failure to the very end of `OrderManagement.complete(…)`.
+
+. Remove the code throwing the `RuntimeException` from `InventoryManagement` and rather move the failure to the very end of `OrderManagement.complete(…)`.
 This way, we simulate an error occurring _after_ the event listeners have been executed.
-Re-run `OrderManagementIntegrationTests.completesOrder()` and look at the log output:
+Re-run `OrderManagementIntegrationTests.completesOrder()` and look at the log output.
+ifndef::educates[]
 +
+endif::[]
 [literal]
 ----
 … main : Started OrderManagementIntegrationTests in 1.463 seconds (process running for 2.262)
