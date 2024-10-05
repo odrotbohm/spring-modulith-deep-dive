@@ -92,7 +92,7 @@
 			<plugin>
 				<groupId>net.bytebuddy</groupId>
 				<artifactId>byte-buddy-maven-plugin</artifactId>
-				<version>1.14.5</version>
+				<version>${bytebuddy.version}</version>
 				<executions>
 					<execution>
 						<goals>
