@@ -13,12 +13,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-// tag::modularityTests[]
 package com.example.app;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.modulith.core.ApplicationModules;
-import org.springframework.modulith.docs.Documenter;
 
 class ApplicationModularityTests {
 
@@ -26,8 +24,5 @@ class ApplicationModularityTests {
 	void writeDocumentation() {
 
 		var modules = ApplicationModules.of(Application.class);
-
-		new Documenter(modules).writeDocumentation();
 	}
 }
-// end::modularityTests[]

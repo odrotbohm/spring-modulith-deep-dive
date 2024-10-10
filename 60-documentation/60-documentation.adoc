@@ -1,3 +1,4 @@
+[[documentation]]
 = Documentation
 :toc:
 :source: complete/src/main/java/com/example/app
@@ -19,23 +20,62 @@ hidden: true
 ----
 endif::[]
 
-== 🧑‍💻 -- Generating application module documentation
+[[documentation.fundamentals]]
+== 🧑‍💻 Generating Application Module Documentation
 
 You'll
 
-=== Steps -- Documentation
+[[documentation.fundamentals.objectives]]
+=== 🎯 Objectives
 
-1. Create an instance of `Documenter` by handing the `ApplicationModules` instance you have just created into its constructor.
-2. On that `Documenter` instance, call `createDocumentation()`.
-3. Run `ApplicationModularityTests`.
+[[documentation.fundamentals.basics]]
+=== 👣 Documentation
 
-=== Steps -- Documenting Spring Boot Configuration Properties
+. Replace `spring-modulith-core` artifact with `spring-modulith-starter-test`.
++
+[source, xml, subs="attributes+"]
+----
+<dependency>
+	<groupId>org.springframework.modulith</groupId>
+	<artifactId>spring-modulith-starter-test</artifactId>
+	<version>{spring-modulith-version}</version>
+</dependency>
+----
+
+. Run `./mvnw dependency:list -Dsort` to see the altered output.
++
+[source, bash, subs="attributes+"]
+----
+[INFO] org.springframework.modulith:spring-modulith-api:jar:{spring-modulith-version}:test -- module org.springframework.modulith.api [auto]
+[INFO] org.springframework.modulith:spring-modulith-core:jar:{spring-modulith-version}:test -- module org.springframework.modulith.core [auto]
+[INFO] org.springframework.modulith:spring-modulith-docs:jar:{spring-modulith-version}:test -- module org.springframework.modulith.docs [auto]
+[INFO] org.springframework.modulith:spring-modulith-events-api:jar:{spring-modulith-version}:compile -- module org.springframework.modulith.events.api [auto]
+[INFO] org.springframework.modulith:spring-modulith-starter-test:jar:{spring-modulith-version}:test -- module org.springframework.modulith.starter.test [auto]
+[INFO] org.springframework.modulith:spring-modulith-test:jar:{spring-modulith-version}:test -- module org.springframework.modulith.test [auto]
+----
+
+. Alter `ApplicationModularityTests` to create an instance of `Documenter` and call `writeDocumentation()` on it:
++
+[source, java]
+----
+include::{test-source}/ApplicationModularityTests.java[tag=modularityTests]
+----
+
+. Run the test case and see how the execution has created a folder `target/spring-modulith-docs`.
+
+[[documentation.fundamentals.configuration-properties]]
+=== 👣 Documenting Spring Boot Configuration Properties
 
 1. Add Spring Boot configuration properties type to project
 +
 [source, java]
 ----
-include::{source}/inventory/InventoryProperties.java[]
+include::{source}/inventory/InventorySettings.java[]
 ----
 2. Add configuration properties processor to project
 3. Re-run `ApplicationModularityTests` and see how
+
+[[documentation.fundamentals.further-ideas]]
+=== 💡 Further ideas
+* Play with the visibility of the internal components like `InventoryRepository`.
+How does it affect the output of documentation generation?

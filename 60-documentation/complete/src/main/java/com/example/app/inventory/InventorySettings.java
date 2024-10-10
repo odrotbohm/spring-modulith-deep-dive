@@ -1,5 +1,5 @@
 /*
- * Copyright 2024 the original author or authors.
+ * Copyright 2022-2024 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,21 +13,22 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-// tag::modularityTests[]
-package com.example.app;
+package com.example.app.inventory;
 
-import org.junit.jupiter.api.Test;
-import org.springframework.modulith.core.ApplicationModules;
-import org.springframework.modulith.docs.Documenter;
+import lombok.AccessLevel;
+import lombok.RequiredArgsConstructor;
+import lombok.Value;
 
-class ApplicationModularityTests {
+import org.springframework.boot.context.properties.ConfigurationProperties;
+import org.springframework.boot.context.properties.bind.ConstructorBinding;
 
-	@Test
-	void writeDocumentation() {
+@Value
+@RequiredArgsConstructor(access = AccessLevel.PACKAGE, onConstructor = @__(@ConstructorBinding))
+@ConfigurationProperties("example.inventory")
+class InventorySettings {
 
-		var modules = ApplicationModules.of(Application.class);
-
-		new Documenter(modules).writeDocumentation();
-	}
+	/**
+	 * Some Javadoc.
+	 */
+	int stockThreshold;
 }
-// end::modularityTests[]

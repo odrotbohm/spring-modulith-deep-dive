@@ -11,6 +11,7 @@
 		<groupId>de.odrotbohm.smdd</groupId>
 		<artifactId>documentation</artifactId>
 		<version>1.0-SNAPSHOT</version>
+		<relativePath>../pom.xml</relativePath>
 	</parent>
 
 	<dependencyManagement>
@@ -38,12 +39,47 @@
 			<groupId>org.jmolecules.integrations</groupId>
 			<artifactId>jmolecules-starter-ddd</artifactId>
 		</dependency>
+		
+		<dependency>
+			<groupId>org.jmolecules.integrations</groupId>
+			<artifactId>jmolecules-spring</artifactId>
+			<scope>runtime</scope>
+		</dependency>
+		
+		<dependency>
+			<groupId>org.jmolecules.integrations</groupId>
+			<artifactId>jmolecules-jpa</artifactId>
+			<scope>runtime</scope>
+		</dependency>
+		
+		<dependency>
+			<groupId>org.jmolecules.integrations</groupId>
+			<artifactId>jmolecules-bytebuddy-nodep</artifactId>
+		</dependency>
+
+		<!-- Spring Boot -->
+
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-data-jpa</artifactId>
+		</dependency>
+		
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-test</artifactId>
+			<scope>test</scope>
+		</dependency>
 
 		<!-- Spring Modulith -->
 
 		<dependency>
 			<groupId>org.springframework.modulith</groupId>
-			<artifactId>spring-modulith-starter-test</artifactId>
+			<artifactId>spring-modulith-events-api</artifactId>
+		</dependency>
+
+		<dependency>
+			<groupId>org.springframework.modulith</groupId>
+			<artifactId>spring-modulith-core</artifactId>
 			<scope>test</scope>
 		</dependency>
 
@@ -54,33 +90,10 @@
 			<artifactId>lombok</artifactId>
 		</dependency>
 
-		<dependency>
-			<groupId>org.springframework.boot</groupId>
-			<artifactId>spring-boot-configuration-processor</artifactId>
-			<optional>true</optional>
-		</dependency>
-
 	</dependencies>
 
 	<build>
 		<plugins>
-
-			<!--
-			<plugin>
-				<groupId>org.springframework.boot</groupId>
-				<artifactId>spring-boot-maven-plugin</artifactId>
-				<configuration>
-					<executable>true</executable>
-				</configuration>
-				<dependencies>
-					<dependency>
-						<groupId>org.springframework.boot.experimental</groupId>
-						<artifactId>spring-boot-thin-layout</artifactId>
-						<version>1.0.29.RELEASE</version>
-					</dependency>
-				</dependencies>
-			</plugin>
-			-->
 
 			<plugin>
 				<groupId>net.bytebuddy</groupId>
@@ -110,17 +123,12 @@
 					<plugin>
 						<groupId>org.asciidoctor</groupId>
 						<artifactId>asciidoctor-maven-plugin</artifactId>
-						<version>2.2.2</version>
+						<version>3.0.0</version>
 						<dependencies>
 							<dependency>
 								<groupId>org.asciidoctor</groupId>
-								<artifactId>asciidoctorj</artifactId>
-								<version>2.5.4</version>
-							</dependency>
-							<dependency>
-								<groupId>org.asciidoctor</groupId>
 								<artifactId>asciidoctorj-diagram</artifactId>
-								<version>2.2.3</version>
+								<version>2.3.1</version>
 							</dependency>
 						</dependencies>
 						<executions>
@@ -133,7 +141,7 @@
 								<configuration>
 									<requires>
 										<require>asciidoctor-diagram</require>
-									</requires>								
+									</requires>
 								</configuration>
 							</execution>
 						</executions>
@@ -142,39 +150,5 @@
 			</build>
 		</profile>
 	</profiles>
-
-	<repositories>
-		<repository>
-			<id>spring-milestone</id>
-			<url>https://repo.spring.io/milestone</url>
-			<snapshots>
-				<enabled>false</enabled>
-			</snapshots>
-		</repository>
-		<repository>
-			<id>spring-snapshots</id>
-			<url>https://repo.spring.io/snapshot</url>
-			<releases>
-				<enabled>false</enabled>
-			</releases>
-		</repository>
-	</repositories>
-
-	<pluginRepositories>
-		<pluginRepository>
-			<id>spring-milestone</id>
-			<url>https://repo.spring.io/milestone</url>
-			<snapshots>
-				<enabled>false</enabled>
-			</snapshots>
-		</pluginRepository>
-		<pluginRepository>
-			<id>spring-snapshots</id>
-			<url>https://repo.spring.io/snapshot</url>
-			<releases>
-				<enabled>false</enabled>
-			</releases>
-		</pluginRepository>
-	</pluginRepositories>
 
 </project>
