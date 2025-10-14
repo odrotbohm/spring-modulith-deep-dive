@@ -17,7 +17,7 @@ package com.example.app.inventory;
 
 import lombok.RequiredArgsConstructor;
 
-import org.springframework.modulith.ApplicationModuleListener;
+import org.springframework.modulith.events.ApplicationModuleListener;
 import org.springframework.stereotype.Component;
 
 import com.example.app.orders.OrderCompleted;
